@@ -1,0 +1,4 @@
+#1 In ajaxwrapper.py, change directory "SCRIPTDIR"
+
+Det finns nåt sätt i python att göra "%USERPROFILE%" men jag vet inte hur.
+Är det någon som kan så hade det varit gött, så slipper vi ändra varje gång.
