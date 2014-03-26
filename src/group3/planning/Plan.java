@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Plan {
-	private List plan = new ArrayList(); 
+	private List<String> plan = new ArrayList(); 
 
 	public void add(String string) {
 		plan.add(string);
