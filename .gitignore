@@ -1,2 +1,5 @@
 /bin
 /startaServer.bat
+/src/startaServer.bat
+/cgi-bin/ajaxwrapper.py
+
