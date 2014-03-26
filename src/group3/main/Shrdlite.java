@@ -1,3 +1,4 @@
+package group3.main;
 
 // First compile the program:
 // javac -cp gnuprologjava-0.2.6.jar:json-simple-1.1.1.jar:. Shrdlite.java
@@ -14,6 +15,11 @@ import java.io.IOException;
 
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.PrologException;
+import group3.interpretation.Interpreter;
+import group3.parsing.DCGParser;
+import group3.planning.Goal;
+import group3.planning.Plan;
+import group3.planning.Planner;
 
 import org.json.simple.parser.ParseException;
 import org.json.simple.JSONValue;
@@ -51,11 +57,11 @@ public class Shrdlite {
 
         } else {
             List goals = new ArrayList();
-            // Interpreter interpreter = new Interpreter(world, holding, objects);
+            Interpreter interpreter = new Interpreter(world, holding, objects);
             for (Term tree : trees) {
-                // for (Goal goal : interpreter.interpret(tree)) {
-                //     goals.add(goal);
-                // }
+                for (Goal goal : interpreter.interpret(tree)) {
+                     goals.add(goal);
+                }
                 goals.add(true);
             }
             result.put("goals", goals);
@@ -67,18 +73,18 @@ public class Shrdlite {
                 result.put("output", "Ambiguity error!");
 
             } else {
-                // Planner planner = new Planner(world, holding, objects);
-                // Plan plan = planner.solve(goals.get(0));
+                Planner planner = new Planner(world, holding, objects);
+                Plan plan = planner.solve(goals.get(0));
                 int column = 0;
                 while (((JSONArray)world.get(column)).isEmpty()) column++;
-                List plan = new ArrayList(); 
-                plan.add("I pick up . . ."); 
-                plan.add("pick " + column);
-                plan.add(". . . and then I drop down"); 
-                plan.add("drop " + column);
+                List temp_plan = new ArrayList(); 
+                temp_plan.add("I pick up . . ."); 
+                temp_plan.add("pick " + column);
+                temp_plan.add(". . . and then I drop down"); 
+                temp_plan.add("drop " + column);
                 result.put("plan", plan);
 
-                if (plan.isEmpty()) {
+                if (temp_plan.isEmpty()) {
                     result.put("output", "Planning error!");
                 } else {
                     result.put("output", "Success!");
