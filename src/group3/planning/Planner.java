@@ -11,7 +11,8 @@ public class Planner {
 
 	public Plan solve(Object object) {
 		// TODO Auto-generated method stub
-		return null;
+		Plan plan = new Plan();
+		return plan;
 	}
 
 }
