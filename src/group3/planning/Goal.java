@@ -1,9 +1,28 @@
 package group3.planning;
 
-public class Goal {
+import group3.definitions.Location;
+import group3.definitions.ObjectInWorld;
 
+public class Goal {
+	
+	private ObjectInWorld objectToMove;
+	private Location locationToMoveTo;
+	
 	public Goal() {
 		
+	}
+	
+	public Goal(ObjectInWorld objectToMove, Location locationToMoveTo) {
+		this.objectToMove = objectToMove;
+		this.locationToMoveTo = locationToMoveTo;
+	}
+	
+	public ObjectInWorld GetObjectToMove() {
+		return this.objectToMove;
+	}
+	
+	public Location GetLocationToMoveTo() {
+		return this.locationToMoveTo;
 	}
 	
 	/**

@@ -1,20 +1,20 @@
 package group3.definitions;
 
-public abstract class Location {
+public class Location {
 	
-	String relation;
-	ObjectInWorld objectToMoveTo;
+	private Relation relation;
+	private ObjectInWorld objectToMoveTo;
 	
-	public Location(String relation, ObjectInWorld objectToMoveTo) {
+	public Location(Relation relation, ObjectInWorld objectToMoveTo) {
 		this.relation = relation;
 		this.objectToMoveTo = objectToMoveTo;
 	}
 
-	public String getRelation() {
-		return relation;
+	public Relation getRelation() {
+		return this.relation;
 	}
 
 	public ObjectInWorld getObjectToMoveTo() {
-		return objectToMoveTo;
+		return this.objectToMoveTo;
 	}
 }

@@ -1,24 +1,26 @@
 package group3.definitions;
 
-public abstract class ObjectInWorld {
+public class ObjectInWorld {
 	
-	String shape, colour, size;
+	private Shape shape;
+	private Colour colour;
+	private Size size;
 	
-	public ObjectInWorld(String shape, String colour, String size) {
+	public ObjectInWorld(Shape shape, Colour colour, Size size) {
 		this.shape = shape;
 		this.colour = colour;
 		this.size = size;
 	}
 
-	public String getShape() {
-		return shape;
+	public Shape getShape() {
+		return this.shape;
 	}
 
-	public String getColour() {
-		return colour;
+	public Colour getColour() {
+		return this.colour;
 	}
 
-	public String getSize() {
-		return size;
+	public Size getSize() {
+		return this.size;
 	}
 }
