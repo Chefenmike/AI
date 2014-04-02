@@ -1,28 +1,28 @@
 package group3.planning;
 
-import group3.definitions.Relation;
-import group3.definitions.ObjectInWorld;
+import group3.definitions.Location;
+import group3.definitions.TargetInterface;
 
 public class Goal {
 	
-	private ObjectInWorld[] objectsToMove;
-	private Relation locationsToMoveTo[];
+	private TargetInterface target;
+	private Location location;
 	
 	public Goal() {
 		
 	}
 	
-	public Goal(ObjectInWorld[] objectsToMove, Relation[] locationsToMoveTo) {
-		this.objectsToMove = objectsToMove;
-		this.locationsToMoveTo = locationsToMoveTo;
+	public Goal(TargetInterface target, Location location) {
+		this.target = target;
+		this.location = location;
 	}
 	
-	public ObjectInWorld[] GetObjectToMove() {
-		return this.objectsToMove;
+	public TargetInterface GetTargetToMove() {
+		return this.target;
 	}
 	
-	public Relation[] GetLocationToMoveTo() {
-		return this.locationsToMoveTo;
+	public Location GetLocationToMoveTo() {
+		return this.location;
 	}
 	
 	/**

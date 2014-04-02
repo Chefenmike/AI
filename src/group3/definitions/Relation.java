@@ -1,6 +1,6 @@
 package group3.definitions;
 
-public class Relation {
+public class Relation implements TargetInterface {
 	
 	private Location location;
 	private ObjectInWorld objectToMoveTo;
