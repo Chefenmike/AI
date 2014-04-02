@@ -1,22 +1,20 @@
 package group3.definitions;
 
-public enum Relation {
-	ON("in"), IN("in"), UNDER("under");
+public class Relation {
 	
-	private String relationStringDescription;
+	private RelativePosition relativePosition;
+	private ObjectInWorld objectToMoveTo;
 	
-	private Relation(String relationStringDescription) {
-		this.relationStringDescription = relationStringDescription; 
+	public Relation(RelativePosition relativePosition, ObjectInWorld objectToMoveTo) {
+		this.relativePosition = relativePosition;
+		this.objectToMoveTo = objectToMoveTo;
 	}
-	
-	public static Relation getRelationValueFromString(String relationString) {
-		if(relationString != null) {
-			for(Relation relation : Relation.values()) {
-				if(relationString.equalsIgnoreCase(relation.relationStringDescription)) {
-					return relation;
-				}
-			}
-		}
-		throw new IllegalArgumentException("No relation with description " + relationString + " found");
+
+	public RelativePosition getRelativePosition() {
+		return this.relativePosition;
+	}
+
+	public ObjectInWorld getObjectToMoveTo() {
+		return this.objectToMoveTo;
 	}
 }

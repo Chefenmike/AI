@@ -2,18 +2,18 @@ package group3.definitions;
 
 public class Location {
 	
-	private Relation relation;
+	private RelativePosition relativePosition;
 	private ObjectInWorld objectToMoveTo;
 	
-	public Location(Relation relation, ObjectInWorld objectToMoveTo) {
-		this.relation = relation;
-		this.objectToMoveTo = objectToMoveTo;
+	public Location(RelativePosition relativePosition, ObjectInWorld objectInWorld) {
+		this.relativePosition = relativePosition;
+		this.objectToMoveTo = objectInWorld;
 	}
-
-	public Relation getRelation() {
-		return this.relation;
+	
+	public RelativePosition getRelativePosition() {
+		return this.relativePosition;
 	}
-
+	
 	public ObjectInWorld getObjectToMoveTo() {
 		return this.objectToMoveTo;
 	}
