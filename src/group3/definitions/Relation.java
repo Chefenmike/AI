@@ -2,16 +2,16 @@ package group3.definitions;
 
 public class Relation {
 	
-	private RelativePosition relativePosition;
+	private Location location;
 	private ObjectInWorld objectToMoveTo;
 	
-	public Relation(RelativePosition relativePosition, ObjectInWorld objectToMoveTo) {
-		this.relativePosition = relativePosition;
+	public Relation(Location location, ObjectInWorld objectToMoveTo) {
+		this.location = location;
 		this.objectToMoveTo = objectToMoveTo;
 	}
 
-	public RelativePosition getRelativePosition() {
-		return this.relativePosition;
+	public Location getLocation() {
+		return this.location;
 	}
 
 	public ObjectInWorld getObjectToMoveTo() {
