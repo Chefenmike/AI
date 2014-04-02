@@ -31,6 +31,9 @@ public class Interpreter {
 		List<Goal> goals = new ArrayList<>();
 		
 		Goal g = new Goal();
+		
+		g.setString(tree.toString());
+		
         goals.add(g);
 		
 		return goals;

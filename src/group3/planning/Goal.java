@@ -7,6 +7,7 @@ public class Goal {
 	
 	private TargetInterface target;
 	private Location location;
+	private String outputString = "";
 	
 	public Goal() {
 		
@@ -25,12 +26,17 @@ public class Goal {
 		return this.location;
 	}
 	
+	public void setString(String s) {
+		this.outputString = s;
+	}
+	
 	/**
 	 * Goals must have a string, surrounded with "fnutts".
 	 * This method is called by the method put in JSONObject.
 	 */
 	@Override
 	public String toString() {
-		return "\"halloj\"";
+		//TODO implement
+		return "\""+ outputString +"\"";
 	}
 }
