@@ -1,7 +1,7 @@
 package group3.definitions;
 
 public enum Colour {
-	WHITE("white"), BLACK("black"), RED("red"), GREEN("green"), BLUE("blue"), YELLOW("yellow");
+	WHITE("white"), BLACK("black"), RED("red"), GREEN("green"), BLUE("blue"), YELLOW("yellow"), UNSPECIFIED("(-)");
 	
 	private String colourStringDescription;
 	

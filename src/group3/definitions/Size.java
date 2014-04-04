@@ -1,7 +1,7 @@
 package group3.definitions;
 
 public enum Size {
-	SMALL("small"), LARGE("large");
+	SMALL("small"), LARGE("large"), UNSPECIFIED("(-)");
 	
 	private String sizeStringDescription;
 	

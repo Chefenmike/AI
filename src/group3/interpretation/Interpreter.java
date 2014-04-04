@@ -3,6 +3,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gnu.prolog.term.Term;
+import gnu.prolog.term.CompoundTerm;
+import group3.definitions.ObjectInWorld;
+import group3.definitions.RelativePosition;
+import group3.definitions.World;
 import group3.planning.Goal;
 
 import org.json.simple.JSONArray;
@@ -10,14 +14,12 @@ import org.json.simple.JSONObject;
 
 
 public class Interpreter {
-	private JSONArray world;
+	private World world;
 	private String holding;
 	private JSONObject objects;
-
+	
 	public Interpreter(JSONArray world, String holding, JSONObject objects) {
-		this.world=world;
-		this.holding=holding;
-		this.objects=objects;
+		this.world = new World(world, holding, objects);
 	}
 
 	/**
@@ -26,17 +28,33 @@ public class Interpreter {
 	 * @return a list of all possible interpretations of the tree.
 	 */
 	public List<Goal> interpret(Term tree) {
-		// TODO Auto-generated method stub
+		CompoundTerm term = (CompoundTerm) tree;
+		List<Goal> goals = new ArrayList<Goal>();
+		ArrayList<ObjectInWorld> possibleObjects = new ArrayList<ObjectInWorld>();
 		
-		List<Goal> goals = new ArrayList<>();
+		String command = term.tag.toString();
+		if (command.contains("take")) {
+			possibleObjects = world.getObjects(term.args[0]);
+			
+			//create a goal for every possible object that will fulfill the goal
+			for (ObjectInWorld o : possibleObjects) {
+				Goal g = new Goal(o, RelativePosition.HOLDING);		
+				g.setString(o.toString());
+		        goals.add(g);
+			}
+		} else if (command.contains("move")) {
+			
+		}
 		
-		Goal g = new Goal();
+		//Term[] t = term.args;
 		
-		g.setString(tree.toString());
-		
+		Goal g = new Goal();		
+		g.setString(term.tag.toString());
         goals.add(g);
 		
 		return goals;
 	}
+	
+	
 
 }
