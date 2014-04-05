@@ -39,18 +39,12 @@ public class Interpreter {
 			//create a goal for every possible object that will fulfill the goal
 			for (ObjectInWorld o : possibleObjects) {
 				Goal g = new Goal(o, RelativePosition.HOLDING);		
-				g.setString(o.toString());
+				g.setString(o.getId());
 		        goals.add(g);
 			}
 		} else if (command.contains("move")) {
 			
 		}
-		
-		//Term[] t = term.args;
-		
-		Goal g = new Goal();		
-		g.setString(term.tag.toString());
-        goals.add(g);
 		
 		return goals;
 	}

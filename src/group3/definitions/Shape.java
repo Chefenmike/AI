@@ -1,7 +1,7 @@
 package group3.definitions;
 
 public enum Shape {
-	BALL("ball"), BOX("box"), BRICK("brick"), FLOOR("floor"), PYRAMID("pyramid"), TABLE("table"), UNSPECIFIED("anyform ");
+	BALL("ball"), BOX("box"), BRICK("brick"), FLOOR("floor"), PYRAMID("pyramid"), TABLE("table"), UNSPECIFIED("anyform");
 	
 	private String shapeStringDescription;
 	

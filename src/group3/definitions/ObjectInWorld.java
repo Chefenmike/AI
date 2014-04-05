@@ -26,6 +26,10 @@ public class ObjectInWorld implements TargetInterface {
 		return this.size;
 	}
 	
+	public String getId() {
+		return this.id;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof ObjectInWorld)) {
@@ -35,4 +39,9 @@ public class ObjectInWorld implements TargetInterface {
 			return this.id.equals(o2.id);
 		}
 	}
+	
+	/*@Override
+	public String toString() {
+		return "\"" + id + "\"";
+	}*/
 }

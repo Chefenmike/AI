@@ -27,7 +27,7 @@ public class World {
 						Colour.getColourValueFromString((String) obj
 								.get("color")), Size
 								.getSizeValueFromString((String) obj
-										.get("size")), (String) objects.get(column.get(j)).toString());
+										.get("size")), column.get(j).toString());
 				columnList.add(oiw);
 			}
 			worldRepresentationList.add(columnList);
@@ -42,7 +42,7 @@ public class World {
 							.get("color")), Size
 							.getSizeValueFromString((String) hold
 									.get("size")), 
-									(String) objects.get(holding).toString());
+									objects.get(holding).toString());
 			this.holding = oiw;
 		}
 	}
@@ -51,17 +51,15 @@ public class World {
 		return holding;
 	}
 
+	/**
+	 * Returns a list of all objects in the world that fits the description given in the input Prolog-term.
+	 * @param term
+	 * @return
+	 */
 	public ArrayList<ObjectInWorld> getObjects(Term term) {
 		ArrayList<ObjectInWorld> returnList = new ArrayList<ObjectInWorld>();
 		
 		CompoundTerm compound = (CompoundTerm) term;
-		
-/*		int termType = term.getTermType();
-		if(termType==term.ATOM) {
-			
-		} else if (termType==term.COMPOUND) {
-			
-		}*/
 		
 		if (compound.tag.toString().contains("object")) {
 			Shape shape = Shape.getShapeValueFromString(getAtomString(compound.args[0]));
@@ -70,21 +68,34 @@ public class World {
 			
 			for (ArrayList<ObjectInWorld> a : worldRepresentationList) {
 				for(ObjectInWorld obj : a) {
-					if (obj.getShape().equals(shape) && obj.getColour().equals(color)) {
-						if (obj.getSize().equals(Size.UNSPECIFIED) || obj.getSize().equals(size)) {
-							returnList.add(obj);
-						}
+					boolean suitable = true; //object fits description
+					
+					if (!shape.equals(Shape.UNSPECIFIED) && !obj.getShape().equals(shape)) {
+						//wrong shape
+						suitable = false;
+					} else if (!size.equals(Size.UNSPECIFIED) && !obj.getSize().equals(size)) {
+						//wrong size
+						suitable = false;
+					} else if (!color.equals(Colour.UNSPECIFIED) && !obj.getColour().equals(color)) {
+						//wrong color
+						suitable = false;
+					} 
+					
+					if (suitable) {
+						returnList.add(obj);
 					}
 				}
 			}
 		} else if (compound.tag.toString().contains("basic_entity")) {
+			//TODO: implement quantifier (arg 0)
 			return getObjects(compound.args[1]); //recursive call
+		} else if (compound.tag.toString().contains("relative_entity")) {
+			//TODO: arg 0 and 2
+			return getObjects(compound.args[1]);
+		} else if (compound.tag.toString().contains("relative")) {
+			
 		}
 		
-		
-		
-		
-		// TODO Auto-generated method stub
 		return returnList;
 	}
 	
