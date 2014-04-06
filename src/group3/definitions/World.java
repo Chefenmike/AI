@@ -7,12 +7,12 @@ import org.json.simple.JSONObject;
 
 public class World {
 
-	private ArrayList worldRepresentationList;
+	private ArrayList<ArrayList<ObjectInWorld>> worldRepresentationList;
 
 	public World(JSONArray world, JSONObject objects) {
-		worldRepresentationList = new ArrayList<ObjectInWorld>();
+		worldRepresentationList = new ArrayList<>();
 		for (int i = 0; i < world.size(); i++) {
-			ArrayList columnList = new ArrayList<ObjectInWorld>();
+			ArrayList<ObjectInWorld> columnList = new ArrayList<>();
 			JSONArray column = (JSONArray) world.get(i);
 
 			for (int j = 0; j < column.size(); j++) {
@@ -27,6 +27,10 @@ public class World {
 			}
 			worldRepresentationList.add(columnList);
 		}
+	}
+	
+	public ArrayList<ArrayList<ObjectInWorld>> getWorldRepresentationList() {
+		return this.worldRepresentationList;
 	}
 
 }
