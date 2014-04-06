@@ -1,7 +1,7 @@
 package group3.definitions;
 
 public enum RelativePosition {
-	ON("on"), IN("in"), UNDER("under");
+	ON("on"), IN("in"), UNDER("under"), HOLDING("holding");
 	
 	private String relativepositionStringDescription;
 	
