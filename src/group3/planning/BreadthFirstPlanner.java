@@ -42,7 +42,7 @@ public class BreadthFirstPlanner {
 						tempWorld.addObjectInWorldToColumn(i, tempObjectInWorld);
 						addPutToSearchPathList(tempList, entry.getValue(), i);
 						if (goal.isFulfilled(tempWorld)) {
-							return new Plan();
+							return new Plan(tempList);
 						}
 						newWorldList.put(tempWorld, tempList);
 					}
@@ -55,7 +55,7 @@ public class BreadthFirstPlanner {
 						tempWorld.addObjectInWorldToHolding(tempObjectInWorld);
 						addPickToSearchPathList(tempList, entry.getValue(), i);
 						if (goal.isFulfilled(tempWorld)) {
-							return new Plan();
+							return new Plan(tempList);
 						}
 						newWorldList.put(tempWorld, tempList);
 					}
