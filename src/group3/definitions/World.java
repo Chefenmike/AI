@@ -19,7 +19,6 @@ public class World {
 		for (int i = 0; i < world.size(); i++) {
 			ArrayList<ObjectInWorld> columnList = new ArrayList<ObjectInWorld>();
 			JSONArray column = (JSONArray) world.get(i);
-
 			for (int j = 0; j < column.size(); j++) {
 				JSONObject obj = (JSONObject) objects.get(column.get(j));
 				ObjectInWorld oiw = new ObjectInWorld(
@@ -45,6 +44,23 @@ public class World {
 									objects.get(holding).toString());
 			this.holding = oiw;
 		}
+	}
+	
+	public World(World world) {
+		worldRepresentationList = new ArrayList<ArrayList<ObjectInWorld>>();
+		for (int i = 0; i < world.getWorldSize(); i++) {
+			ArrayList<ObjectInWorld> columnList = new ArrayList<ObjectInWorld>();
+			ArrayList<ObjectInWorld> column = world.getWorldRepresentationList().get(i);
+			for (int j = 0; j < column.size(); j++) {
+				ObjectInWorld tempObject = new ObjectInWorld(column.get(j).getShape(), 
+					column.get(j).getColour(), 
+					column.get(j).getSize(), 
+					column.get(j).getId());
+				columnList.add(tempObject);
+			}
+			worldRepresentationList.add(columnList);
+		}
+		holding = world.holding;
 	}
 	
 	public ObjectInWorld getHoldingObject() {

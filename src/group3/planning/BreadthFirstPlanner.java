@@ -21,7 +21,7 @@ public class BreadthFirstPlanner {
 		this.world = world;
 	}
 
-	public Plan findSolution(Goal goal) {
+	public Plan findSolution(Goal goal) throws TimeLimitExceededException {
 		if (goal.isFulfilled(world))
 			return new Plan();
 		Map<World, List<String>> worldList = new HashMap<World, List<String>>();
@@ -32,12 +32,12 @@ public class BreadthFirstPlanner {
 		while (!Thread.interrupted()) {
 			Map<World, List<String>> newWorldList = new HashMap<World, List<String>>();
 			for (Map.Entry<World, List<String>> entry : worldList.entrySet()) {
-				workingCopyOfWorld = copyOfWorld(entry.getKey());
+				workingCopyOfWorld = new World(entry.getKey());
 				if (workingCopyOfWorld.getHoldingObject() != null) {
 					tempObjectInWorld = workingCopyOfWorld.getHoldingObject();
 					workingCopyOfWorld.removeHolding();
 					for (int i = 0; i < workingCopyOfWorld.getWorldSize(); i++) {
-						tempWorld = copyOfWorld(workingCopyOfWorld);
+						tempWorld = new World(workingCopyOfWorld);
 						List<String> tempList = new ArrayList<String>();
 						tempWorld.addObjectInWorldToColumn(i, tempObjectInWorld);
 						addPutToSearchPathList(tempList, entry.getValue(), i);
@@ -48,7 +48,7 @@ public class BreadthFirstPlanner {
 					}
 				} else {	
 					for (int i = 1; i < workingCopyOfWorld.getWorldSize(); i++) {
-						tempWorld = copyOfWorld(workingCopyOfWorld);
+						tempWorld = new World(workingCopyOfWorld);
 						List<String> tempList = new ArrayList<String>();
 						tempObjectInWorld = tempWorld.getFirstObjectInColumn(i);
 						tempWorld.removeTopObjectInColumn(i);
