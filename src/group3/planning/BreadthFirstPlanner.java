@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.TimeLimitExceededException;
+
 import group3.definitions.ObjectInWorld;
 import group3.definitions.World;
 
@@ -20,42 +22,39 @@ public class BreadthFirstPlanner {
 	}
 
 	public Plan findSolution(Goal goal) {
-		if (goal.isFullfilled(world))
+		if (goal.isFulfilled(world))
 			return new Plan();
-
 		Map<World, List<String>> worldList = new HashMap<World, List<String>>();
 		worldList.put(world, new ArrayList<String>());
 		ObjectInWorld tempObjectInWorld;
 		World workingCopyOfWorld, tempWorld;
 		startNewThread();
-
 		while (!Thread.interrupted()) {
 			Map<World, List<String>> newWorldList = new HashMap<World, List<String>>();
-			
 			for (Map.Entry<World, List<String>> entry : worldList.entrySet()) {
 				workingCopyOfWorld = copyOfWorld(entry.getKey());
-				if (robotIsHoldingObject(workingCopyOfWorld)) {
-					tempObjectInWorld = getHeldObject(workingCopyOfWorld);
-					removeHeldObject(workingCopyOfWorld);
-					for (int i = 1; i < getWorldSize(workingCopyOfWorld); i++) {
+				if (workingCopyOfWorld.getHoldingObject() != null) {
+					tempObjectInWorld = workingCopyOfWorld.getHoldingObject();
+					workingCopyOfWorld.removeHolding();
+					for (int i = 0; i < workingCopyOfWorld.getWorldSize(); i++) {
 						tempWorld = copyOfWorld(workingCopyOfWorld);
 						List<String> tempList = new ArrayList<String>();
-						addObjectInWorldToColumn(tempWorld, i, tempObjectInWorld);
+						tempWorld.addObjectInWorldToColumn(i, tempObjectInWorld);
 						addPutToSearchPathList(tempList, entry.getValue(), i);
-						if (goal.isFullfilled(tempWorld)) {
+						if (goal.isFulfilled(tempWorld)) {
 							return new Plan();
 						}
 						newWorldList.put(tempWorld, tempList);
 					}
 				} else {	
-					for (int i = 1; i < getWorldSize(workingCopyOfWorld); i++) {
+					for (int i = 1; i < workingCopyOfWorld.getWorldSize(); i++) {
 						tempWorld = copyOfWorld(workingCopyOfWorld);
 						List<String> tempList = new ArrayList<String>();
-						tempObjectInWorld = getFirstObjectInColumn(tempWorld, i);
-						removeFirstObjectInColumn(tempWorld, i);
-						addObjectInWorldToHolding(tempWorld, tempObjectInWorld);
+						tempObjectInWorld = tempWorld.getFirstObjectInColumn(i);
+						tempWorld.removeTopObjectInColumn(i);
+						tempWorld.addObjectInWorldToHolding(tempObjectInWorld);
 						addPickToSearchPathList(tempList, entry.getValue(), i);
-						if (goal.isFullfilled(tempWorld)) {
+						if (goal.isFulfilled(tempWorld)) {
 							return new Plan();
 						}
 						newWorldList.put(tempWorld, tempList);
@@ -64,6 +63,7 @@ public class BreadthFirstPlanner {
 			}
 			worldList = newWorldList;
 		}
+		throw new TimeLimitExceededException("This took too long");
 	}
 
 	private void startNewThread() {
@@ -78,40 +78,6 @@ public class BreadthFirstPlanner {
 				thisThread.interrupt();
 			}
 		}).start();
-	}
-
-	private boolean robotIsHoldingObject(World w) {
-		return (w.getWorldRepresentationList().get(0).size() != 0);
-	}
-	
-	private int getWorldSize(World w) {
-		return w.getWorldRepresentationList().size();
-	}
-	
-	private ObjectInWorld getHeldObject(World w) {
-		return w.getWorldRepresentationList().get(0).get(0);
-	}
-	
-	private void removeHeldObject(World w) {
-		w.getWorldRepresentationList().get(0).remove(0);
-	}
-	
-	private void addObjectInWorldToColumn(World w, int column, ObjectInWorld oiw) {
-		w.getWorldRepresentationList().get(column).add(oiw);
-	}
-	
-	private ObjectInWorld getFirstObjectInColumn(World w, int column) {
-		return w.getWorldRepresentationList().get(column).
-				get(w.getWorldRepresentationList().get(column).size() - 1);
-	}
-	
-	private void removeFirstObjectInColumn(World w, int column) {
-		w.getWorldRepresentationList().get(column).
-		remove(w.getWorldRepresentationList().get(column).size() - 1);
-	}
-	
-	private void addObjectInWorldToHolding(World w, ObjectInWorld oiw) {
-		w.getWorldRepresentationList().get(0).add(oiw);
 	}
 	
 	private void addPutToSearchPathList(List<String> dst, List<String> src, int column) {

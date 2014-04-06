@@ -51,8 +51,34 @@ public class World {
 		return holding;
 	}
 	
+	public void removeHolding() {
+		holding = null;
+	}
+	
+	public int getWorldSize() {
+		return this.getWorldRepresentationList().size();
+	}
+	
 	public ArrayList<ArrayList<ObjectInWorld>> getWorldRepresentationList() {
 		return this.worldRepresentationList;
+	}
+	
+	public void addObjectInWorldToColumn(int column, ObjectInWorld oiw) {
+		this.getWorldRepresentationList().get(column).add(oiw);
+	}
+	
+	public ObjectInWorld getFirstObjectInColumn(int column) {
+		return this.getWorldRepresentationList().get(column).
+				get(this.getWorldRepresentationList().get(column).size() - 1);
+	}
+	
+	public void removeTopObjectInColumn(int column) {
+		this.getWorldRepresentationList().get(column).
+		remove(this.getWorldRepresentationList().get(column).size() - 1);
+	}
+	
+	public void addObjectInWorldToHolding(ObjectInWorld oiw) {
+		holding = oiw;
 	}
 
 	/**
