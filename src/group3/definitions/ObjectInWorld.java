@@ -1,6 +1,6 @@
 package group3.definitions;
 
-public class ObjectInWorld implements TargetInterface {
+public class ObjectInWorld {
 	
 	private Shape shape;
 	private Colour colour;

@@ -36,7 +36,7 @@ import org.json.simple.JSONArray;
 
 public class Shrdlite {
 
-	private static boolean consoleTest = true;
+	private static boolean consoleTest = false;
 	private static boolean smallWorld = true;
 
 	public static void main(String[] args) throws PrologException,

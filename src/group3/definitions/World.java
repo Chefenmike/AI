@@ -31,7 +31,7 @@ public class World {
 			}
 			worldRepresentationList.add(columnList);
 		}
-		
+
 		//holding object:
 		JSONObject hold = (JSONObject) objects.get(holding); 
 		if (hold != null) {
@@ -45,7 +45,7 @@ public class World {
 			this.holding = oiw;
 		}
 	}
-	
+
 	public World(World world) {
 		worldRepresentationList = new ArrayList<ArrayList<ObjectInWorld>>();
 		for (int i = 0; i < world.getWorldSize(); i++) {
@@ -53,100 +53,92 @@ public class World {
 			ArrayList<ObjectInWorld> column = world.getWorldRepresentationList().get(i);
 			for (int j = 0; j < column.size(); j++) {
 				ObjectInWorld tempObject = new ObjectInWorld(column.get(j).getShape(), 
-					column.get(j).getColour(), 
-					column.get(j).getSize(), 
-					column.get(j).getId());
+						column.get(j).getColour(), 
+						column.get(j).getSize(), 
+						column.get(j).getId());
 				columnList.add(tempObject);
 			}
 			worldRepresentationList.add(columnList);
 		}
 		holding = world.holding;
 	}
-	
+
 	public ObjectInWorld getHoldingObject() {
 		return holding;
 	}
-	
+
 	public void removeHolding() {
 		holding = null;
 	}
-	
+
 	public int getWorldSize() {
 		return this.getWorldRepresentationList().size();
 	}
-	
+
 	public ArrayList<ArrayList<ObjectInWorld>> getWorldRepresentationList() {
 		return this.worldRepresentationList;
 	}
-	
+
 	public void addObjectInWorldToColumn(int column, ObjectInWorld oiw) {
 		this.getWorldRepresentationList().get(column).add(oiw);
 	}
-	
+
 	public ObjectInWorld getFirstObjectInColumn(int column) {
 		return this.getWorldRepresentationList().get(column).
 				get(this.getWorldRepresentationList().get(column).size() - 1);
 	}
-	
+
 	public void removeTopObjectInColumn(int column) {
 		this.getWorldRepresentationList().get(column).
 		remove(this.getWorldRepresentationList().get(column).size() - 1);
 	}
-	
+
 	public void addObjectInWorldToHolding(ObjectInWorld oiw) {
 		holding = oiw;
 	}
 
-	/**
-	 * Returns a list of all objects in the world that fits the description given in the input Prolog-term.
-	 * @param term
-	 * @return
-	 */
-	public ArrayList<ObjectInWorld> getObjects(Term term) {
-		ArrayList<ObjectInWorld> returnList = new ArrayList<ObjectInWorld>();
-		
-		CompoundTerm compound = (CompoundTerm) term;
-		
-		if (compound.tag.toString().contains("object")) {
-			Shape shape = Shape.getShapeValueFromString(getAtomString(compound.args[0]));
-			Size size = Size.getSizeValueFromString(getAtomString(compound.args[1]));
-			Colour color = Colour.getColourValueFromString(getAtomString(compound.args[2]));
-			
-			for (ArrayList<ObjectInWorld> a : worldRepresentationList) {
-				for(ObjectInWorld obj : a) {
-					boolean suitable = true; //object fits description
-					
-					if (!shape.equals(Shape.UNSPECIFIED) && !obj.getShape().equals(shape)) {
-						//wrong shape
-						suitable = false;
-					} else if (!size.equals(Size.UNSPECIFIED) && !obj.getSize().equals(size)) {
-						//wrong size
-						suitable = false;
-					} else if (!color.equals(Colour.UNSPECIFIED) && !obj.getColour().equals(color)) {
-						//wrong color
-						suitable = false;
-					} 
-					
-					if (suitable) {
-						returnList.add(obj);
-					}
-				}
-			}
-		} else if (compound.tag.toString().contains("basic_entity")) {
-			//TODO: implement quantifier (arg 0)
-			return getObjects(compound.args[1]); //recursive call
-		} else if (compound.tag.toString().contains("relative_entity")) {
-			//TODO: arg 0 and 2
-			return getObjects(compound.args[1]);
-		} else if (compound.tag.toString().contains("relative")) {
-			
-		}
-		
-		return returnList;
-	}
 	
-	private String getAtomString(Term term) {
-		AtomicTerm t = (AtomicTerm) term;
-		return t.toString();
+
+	/**
+	 * Checks whether the relative position rp exists between object1 and any of the objects in the list otherObjects.
+	 * @param object1
+	 * @param rp 
+	 * @param otherObjects 
+	 * @return true if the relation exist between object1 and any object in the list
+	 */
+	public boolean checkRelation(ObjectInWorld object1, RelativePosition rp, ArrayList<ObjectInWorld> otherObjects) {
+		for (ObjectInWorld object2 : otherObjects) {
+			if (checkRelation(object1, rp, object2)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean checkRelation(ObjectInWorld object1, RelativePosition rp, ObjectInWorld object2) {
+		if (rp.equals(RelativePosition.INSIDE)) {
+			return isInside(object1, object2); 
+		} else if (rp.equals(RelativePosition.ONTOP)) {
+			//TODO
+		} else if (rp.equals(RelativePosition.ABOVE)) {
+			//TODO
+		} else if (rp.equals(RelativePosition.UNDER)) {
+			//TODO
+		} else if (rp.equals(RelativePosition.BESIDE)) {
+			//TODO
+		} 
+
+		return false;
+	}
+
+	//TODO: Implement this methods + methods for the other relations.
+	/**
+	 * checks if object1 is inside object2
+	 * @param object1
+	 * @param object2
+	 * @return true if object1 is inside object2
+	 */
+	private boolean isInside(ObjectInWorld object1, ObjectInWorld object2) {
+		return true;
 	}
 }

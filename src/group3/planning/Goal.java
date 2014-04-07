@@ -3,12 +3,11 @@ package group3.planning;
 import group3.definitions.Location;
 import group3.definitions.ObjectInWorld;
 import group3.definitions.RelativePosition;
-import group3.definitions.TargetInterface;
 import group3.definitions.World;
 
 public class Goal {
 	
-	private TargetInterface objectToMove;
+	private ObjectInWorld objectToMove;
 	private Location location;
 	private RelativePosition relativePosition;
 	private ObjectInWorld otherObject;
@@ -18,7 +17,7 @@ public class Goal {
 		
 	}
 	
-	public Goal(TargetInterface target, Location location) {
+	public Goal(ObjectInWorld target, Location location) {
 		this.objectToMove = target;
 		this.location = location;
 	}
@@ -34,7 +33,7 @@ public class Goal {
 		this.relativePosition = relativePosition;
 	}
 	
-	public TargetInterface GetTargetToMove() {
+	public ObjectInWorld GetTargetToMove() {
 		return this.objectToMove;
 	}
 	

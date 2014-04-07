@@ -2,10 +2,14 @@ package group3.interpretation;
 import java.util.ArrayList;
 import java.util.List;
 
+import gnu.prolog.term.AtomicTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.term.CompoundTerm;
+import group3.definitions.Colour;
 import group3.definitions.ObjectInWorld;
 import group3.definitions.RelativePosition;
+import group3.definitions.Shape;
+import group3.definitions.Size;
 import group3.definitions.World;
 import group3.planning.Goal;
 
@@ -34,7 +38,7 @@ public class Interpreter {
 		
 		String command = term.tag.toString();
 		if (command.contains("take")) {
-			possibleObjects = world.getObjects(term.args[0]);
+			possibleObjects = getObjects(term.args[0]);
 			
 			//create a goal for every possible object that will fulfill the goal
 			for (ObjectInWorld o : possibleObjects) {
@@ -49,6 +53,79 @@ public class Interpreter {
 		return goals;
 	}
 	
-	
+	/**
+	 * Returns a list of all objects in the world that fits the description given in the input Prolog-term.
+	 * @param term
+	 * @return
+	 */
+	public ArrayList<ObjectInWorld> getObjects(Term term) {
+		ArrayList<ObjectInWorld> returnList = new ArrayList<ObjectInWorld>();
+
+		CompoundTerm compound = (CompoundTerm) term;
+
+		if (compound.tag.toString().contains("object")) {
+			Shape shape = Shape.getShapeValueFromString(getAtomString(compound.args[0]));
+			Size size = Size.getSizeValueFromString(getAtomString(compound.args[1]));
+			Colour color = Colour.getColourValueFromString(getAtomString(compound.args[2]));
+
+			for (ArrayList<ObjectInWorld> a : world.getWorldRepresentationList()) {
+				for(ObjectInWorld obj : a) {
+					boolean suitable = true; //object fits description
+
+					if (!shape.equals(Shape.UNSPECIFIED) && !obj.getShape().equals(shape)) {
+						//wrong shape
+						suitable = false;
+					} else if (!size.equals(Size.UNSPECIFIED) && !obj.getSize().equals(size)) {
+						//wrong size
+						suitable = false;
+					} else if (!color.equals(Colour.UNSPECIFIED) && !obj.getColour().equals(color)) {
+						//wrong color
+						suitable = false;
+					} 
+
+					if (suitable) {
+						returnList.add(obj);
+					}
+				}
+			}
+		} else if (compound.tag.toString().contains("basic_entity")) {
+			//TODO: implement quantifier (arg 0)
+			return getObjects(compound.args[1]); //recursive call
+		} else if (compound.tag.toString().contains("relative_entity")) {
+			//TODO: implement quantifier (arg 0)
+
+			ArrayList<ObjectInWorld> matchingObjects = getObjects(compound.args[1]);
+			return getRelative(matchingObjects, compound.args[2]);
+		} 
+
+		return returnList;
+	}
+
+	/**
+	 * 
+	 * @param matchingObjects
+	 * @param relation
+	 * @return
+	 */
+	private ArrayList<ObjectInWorld> getRelative(ArrayList<ObjectInWorld> matchingObjects, Term relation) {
+		ArrayList<ObjectInWorld> returnList = new ArrayList<ObjectInWorld>();
+		CompoundTerm compound = (CompoundTerm) relation;
+		RelativePosition rp = RelativePosition.getrelativepositionValueFromString(getAtomString(compound.args[0]));	
+		ArrayList<ObjectInWorld> relativeObjects = getObjects(compound.args[1]);
+
+		for (ObjectInWorld o : matchingObjects) {
+			boolean stillMatching = world.checkRelation(o, rp, relativeObjects);
+			if (stillMatching) {
+				returnList.add(o);
+			}
+		}
+
+		return returnList;
+	}
+
+	private String getAtomString(Term term) {
+		AtomicTerm t = (AtomicTerm) term;
+		return t.toString();
+	}
 
 }
