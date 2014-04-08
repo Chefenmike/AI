@@ -21,7 +21,7 @@ public class Interpreter {
 	private World world;
 	private String holding;
 	private JSONObject objects;
-	
+
 	public Interpreter(JSONArray world, String holding, JSONObject objects) {
 		this.world = new World(world, holding, objects);
 	}
@@ -35,24 +35,47 @@ public class Interpreter {
 		CompoundTerm term = (CompoundTerm) tree;
 		List<Goal> goals = new ArrayList<Goal>();
 		ArrayList<ObjectInWorld> possibleObjects = new ArrayList<ObjectInWorld>();
-		
+
 		String command = term.tag.toString();
 		if (command.contains("take")) {
 			possibleObjects = getObjects(term.args[0]);
-			
+
 			//create a goal for every possible object that will fulfill the goal
 			for (ObjectInWorld o : possibleObjects) {
 				Goal g = new Goal(o, RelativePosition.HOLDING);		
 				g.setString(o.getId());
-		        goals.add(g);
+				goals.add(g);
 			}
 		} else if (command.contains("move")) {
+			possibleObjects = getObjects(term.args[0]);
+			CompoundTerm relative = (CompoundTerm) term.args[1];
 			
+
+			if (relative.args[1].getTermType() == Term.ATOM) {
+				//Target = floor
+				RelativePosition rp = RelativePosition.ONFLOOR;
+				for (ObjectInWorld o : possibleObjects) {
+					Goal g = new Goal(o, rp);		
+					g.setString(o.getId() + " " + rp.toString());
+					goals.add(g);
+				}
+			} else {
+				RelativePosition rp = RelativePosition.getrelativepositionValueFromString(getAtomString(relative.args[0]));
+				ArrayList<ObjectInWorld> relativeObjects = getObjects(relative.args[1]);
+
+				for (ObjectInWorld o : possibleObjects) {
+					for (ObjectInWorld r : relativeObjects) {
+						Goal g = new Goal(o, rp, r);		
+						g.setString(o.getId() + " " + rp.toString() + " " + r.getId());
+						goals.add(g);
+					}
+				}
+			}
 		}
-		
+
 		return goals;
 	}
-	
+
 	/**
 	 * Returns a list of all objects in the world that fits the description given in the input Prolog-term.
 	 * @param term
