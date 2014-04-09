@@ -19,7 +19,7 @@ import gnu.prolog.vm.PrologException;
 import gnu.prolog.vm.TermConstants;
 
 public class DCGParser {
-    private static final String prologParserFile = "dcg_parser.pl";
+    private static final String prologParserFile = "C:\\Users\\Gustav\\Desktop\\Chalmers\\Artificial Intelligence\\Project\\AI\\src\\dcg_parser.pl";
 
 	private static Environment env;
 	private static Interpreter interpreter;

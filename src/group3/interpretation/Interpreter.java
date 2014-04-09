@@ -9,6 +9,7 @@ import gnu.prolog.term.CompoundTerm;
 import group3.definitions.Colour;
 import group3.definitions.ObjectInWorld;
 import group3.definitions.RelativePosition;
+import group3.definitions.Rules;
 import group3.definitions.Shape;
 import group3.definitions.Size;
 import group3.definitions.World;
@@ -68,10 +69,13 @@ public class Interpreter {
 
 				for (ObjectInWorld o : possibleObjects) {
 					for (ObjectInWorld r : relativeObjects) {
-						Goal g = new Goal(o, rp, r);
-						g.setString(o.getId() + " " + rp.toString() + " "
-								+ r.getId());
-						goals.add(g);
+						if(Rules.allowedMove(o, r)){
+							Goal g = new Goal(o, rp, r);
+							g.setString(o.getId() + " " + rp.toString() + " "
+									+ r.getId());
+							goals.add(g);
+						
+						}
 					}
 				}
 			}

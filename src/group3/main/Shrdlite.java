@@ -108,7 +108,6 @@ public class Shrdlite {
 			holding = (String) jsinput.get("holding");
 			objects = (JSONObject) jsinput.get("objects");
 			
-			System.out.println("test");
 			World w = new World(world, holding, objects);
 			BreadthFirstPlanner bfp = new BreadthFirstPlanner(w);
 			ObjectInWorld oiw1 = new ObjectInWorld(Shape.BOX, Colour.YELLOW, Size.UNSPECIFIED, "k");
@@ -144,7 +143,7 @@ public class Shrdlite {
 		// JSONObject objectinfo = (JSONObject) objects.get(topobject);
 		// String form = (String) objectinfo.get("form");
 
-		DCGParser parser = new DCGParser("shrdlite_grammar.pl");
+		DCGParser parser = new DCGParser("C:\\Users\\Gustav\\Desktop\\Chalmers\\Artificial Intelligence\\Project\\AI\\src\\shrdlite_grammar.pl");
 		List<Term> trees = parser.parseSentence("command", utterance);
 		List tstrs = new ArrayList();
 		result.put("trees", tstrs);

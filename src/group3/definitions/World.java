@@ -174,7 +174,7 @@ public class World {
 		return false;
 	}
 
-	private boolean isOnFloor(ObjectInWorld object1) {
+	public boolean isOnFloor(ObjectInWorld object1) {
 		for(ArrayList<ObjectInWorld> objList : worldRepresentationList){
 			if(!objList.isEmpty() && objList.get(0).equals(object1)) {
 				return true;
@@ -183,7 +183,7 @@ public class World {
 		return false;
 	}
 
-	private boolean isInside(ObjectInWorld a, ObjectInWorld b) {
+	public boolean isInside(ObjectInWorld a, ObjectInWorld b) {
 		if (b.getShape()==Shape.BOX) {
 			return isOnTopOf(a, b);
 		} else {
@@ -242,7 +242,14 @@ public class World {
 			ArrayList<ObjectInWorld> objList = worldRepresentationList.get(i);
 			for(ObjectInWorld obj : objList){
 				if(obj.equals(a)){
-					return (worldRepresentationList.get(i-1).contains(b) || worldRepresentationList.get(i+1).contains(b));
+					if(i == 0) {
+						return worldRepresentationList.get(i+1).contains(b);
+					} else if(i == worldRepresentationList.size() - 1) {
+						return worldRepresentationList.get(i-1).contains(b);
+					} else {
+						return (worldRepresentationList.get(i-1).contains(b) || worldRepresentationList.get(i+1).contains(b));
+				
+					}
 				}
 			}
 		}
