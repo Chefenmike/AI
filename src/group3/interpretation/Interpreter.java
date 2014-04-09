@@ -136,50 +136,20 @@ public class Interpreter {
 				return getObjects(compound.args[1]);
 			}
 		} else if (compound.tag.toString().contains("relative_entity")) {
-			// TODO: implement quantifier (arg 0)
-
-			ArrayList<ObjectInWorld> matchingObjects = getObjects(compound.args[1]);
-			return getRelative(matchingObjects, compound.args[2]);
-
-			/*switch (getAtomString(compound.args[0])) {
-				case "The":
-					if (getObjects(compound.args[3]).contains(
-							getObjects(compound.args[1]).get(0))) {
-						returnList.add(getObjects(compound.args[1]).get(0));
-					}
-					return returnList;
-				case "Any":
-					if (getObjects(compound.args[3]).contains(
-							getObjects(compound.args[1]).get(0))) {
-						returnList.add(getObjects(compound.args[1]).get(0));
-					} // TODO: Fix proper Any clause.
-				case "All":
-					for (ObjectInWorld obj : getObjects(compound.args[1])) {
-						if (getObjects(compound.args[3]).contains(obj)) {
-							returnList.add(obj);
-						}
-					}
-					return returnList;
-			}*/
-		} /*else if (compound.tag.toString().contains("relative")) {
-			switch(getAtomString(compound.args[0])) {
-			case "inside": //TODO: Code (discuss tuesday/wednesday)
-				break;
-			case "beside": //TODO: Code (discuss tuesday/wednesday)
-				break;
-			case "ontop": //TODO: Code (discuss tuesday/wednesday)
-				break;
-			case "under": //TODO: Code (discuss tuesday/wednesday)
-				break; 
-			case "above": //TODO: Code (discuss tuesday/wednesday)
-				break;
-			case "leftof": //TODO: Code (discuss tuesday/wednesday)
-				break;
-			case "rightof": //TODO: Code (discuss tuesday/wednesday)
-				break;
+			ArrayList<ObjectInWorld> matchingObjects = new ArrayList<ObjectInWorld>();
+			switch (getAtomString(compound.args[0])) {
+			case "the":
+				matchingObjects.add(getObjects(compound.args[1]).get(0));
+				return getRelative(matchingObjects, compound.args[2]);
+			case "any":
+				//TODO: fix proper any clause
+				matchingObjects.addAll(getObjects(compound.args[1]));
+				return getRelative(matchingObjects, compound.args[2]);
+			case "all":
+				matchingObjects = getObjects(compound.args[1]);
+				return getRelative(matchingObjects, compound.args[2]);
 			}
-		}*/
-
+		}
 		return returnList;
 	}
 
