@@ -117,7 +117,7 @@ public class Shrdlite {
 			System.out.println(p.getPlan().toString());
 			
 			// Might be usefull later
-			/*
+			/*S
 			 * System.out.print("The world: " + world.toString() + "\n");
 			 * System.out.print("The utterance: " + utterance.toString() +
 			 * "\n"); System.out.print("Holding: " + holding.toString() + "\n");
