@@ -54,12 +54,23 @@ public class Goal {
 		//TODO implement
 		return "\""+ outputString +"\"";
 	}
-	
+
 	public boolean isFulfilled(World world) {
 		if (relativePosition.equals(RelativePosition.HOLDING) && world.getHoldingObject() != null) {
 			return world.getHoldingObject().equals(objectToMove);
-		}
-		else {
+		} else if (relativePosition.equals(RelativePosition.ONFLOOR)) {
+			return world.isOnFloor(objectToMove);
+		} else if (relativePosition.equals(RelativePosition.ONTOP)) {
+			return world.isOnTopOf(objectToMove, otherObject);
+		} else if (relativePosition.equals(RelativePosition.INSIDE)) {
+			return world.isInside(objectToMove, otherObject);
+		} else if (relativePosition.equals(RelativePosition.ABOVE)) {
+			return world.isAbove(objectToMove, otherObject);
+		} else if (relativePosition.equals(RelativePosition.UNDER)) {
+			return world.isUnder(objectToMove, otherObject);
+		} else if (relativePosition.equals(RelativePosition.BESIDE)) {
+			return world.isBeside(objectToMove, otherObject);
+		} else {
 			return false;
 		}
 	}
