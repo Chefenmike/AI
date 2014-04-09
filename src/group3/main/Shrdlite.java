@@ -106,13 +106,12 @@ public class Shrdlite {
 			utterance = (JSONArray) jsinput.get("utterance");
 			holding = (String) jsinput.get("holding");
 			objects = (JSONObject) jsinput.get("objects");
-			
-			System.out.println("test");
+
 			World w = new World(world, holding, objects);
 			BreadthFirstPlanner bfp = new BreadthFirstPlanner(w);
 			ObjectInWorld oiw1 = new ObjectInWorld(Shape.BOX, Colour.YELLOW, Size.UNSPECIFIED, "k");
 			ObjectInWorld oiw2 = new ObjectInWorld(Shape.TABLE, Colour.BLUE, Size.UNSPECIFIED, "g");
-			Goal g = new Goal(oiw1, RelativePosition.HOLDING);
+			Goal g = new Goal(oiw1, RelativePosition.BESIDE, oiw2);
 			System.out.println("start");
 			Plan p = bfp.findSolution(g);
 			System.out.println(p.getPlan().toString());
