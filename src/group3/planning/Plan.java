@@ -23,5 +23,4 @@ public class Plan {
 	public List<String> getPlan() {
 		return plan;
 	}
-
 }

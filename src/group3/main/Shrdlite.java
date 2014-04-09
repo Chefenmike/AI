@@ -21,10 +21,19 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import javax.naming.TimeLimitExceededException;
+
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.PrologException;
+import group3.definitions.Colour;
+import group3.definitions.ObjectInWorld;
+import group3.definitions.RelativePosition;
+import group3.definitions.Shape;
+import group3.definitions.Size;
+import group3.definitions.World;
 import group3.interpretation.Interpreter;
 import group3.parsing.DCGParser;
+import group3.planning.BreadthFirstPlanner;
 import group3.planning.Goal;
 import group3.planning.Plan;
 import group3.planning.Planner;
@@ -36,11 +45,11 @@ import org.json.simple.JSONArray;
 
 public class Shrdlite {
 
-	private static boolean consoleTest = false;
+	private static boolean consoleTest = true;
 	private static boolean smallWorld = true;
 
 	public static void main(String[] args) throws PrologException,
-			ParseException, IOException {
+			ParseException, IOException, TimeLimitExceededException {
 		JSONObject jsinput;
 
 		JSONArray utterance;
@@ -49,7 +58,6 @@ public class Shrdlite {
 		JSONObject objects;
 
 		String takeCmd = "";
-
 		if (consoleTest) {
 			if (smallWorld) {
 				System.out
@@ -98,7 +106,17 @@ public class Shrdlite {
 			utterance = (JSONArray) jsinput.get("utterance");
 			holding = (String) jsinput.get("holding");
 			objects = (JSONObject) jsinput.get("objects");
-
+			
+			System.out.println("test");
+			World w = new World(world, holding, objects);
+			BreadthFirstPlanner bfp = new BreadthFirstPlanner(w);
+			ObjectInWorld oiw1 = new ObjectInWorld(Shape.BOX, Colour.YELLOW, Size.UNSPECIFIED, "k");
+			ObjectInWorld oiw2 = new ObjectInWorld(Shape.TABLE, Colour.BLUE, Size.UNSPECIFIED, "g");
+			Goal g = new Goal(oiw1, RelativePosition.HOLDING);
+			System.out.println("start");
+			Plan p = bfp.findSolution(g);
+			System.out.println(p.getPlan().toString());
+			
 			// Might be usefull later
 			/*
 			 * System.out.print("The world: " + world.toString() + "\n");
@@ -107,7 +125,6 @@ public class Shrdlite {
 			 * System.out.print("Objects: " + objects.toString() + "\n");
 			 */
 		} else {
-
 			jsinput = (JSONObject) JSONValue.parse(readFromStdin());
 			utterance = (JSONArray) jsinput.get("utterance");
 			world = (JSONArray) jsinput.get("world");
