@@ -1,4 +1,5 @@
 package group3.interpretation;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,6 @@ import group3.planning.Goal;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-
 public class Interpreter {
 	private World world;
 	private String holding;
@@ -28,7 +28,9 @@ public class Interpreter {
 
 	/**
 	 * Converts a tree to a list of goals.
-	 * @param tree The tree to be interpreted as goals.
+	 * 
+	 * @param tree
+	 *            The tree to be interpreted as goals.
 	 * @return a list of all possible interpretations of the tree.
 	 */
 	public List<Goal> interpret(Term tree) {
@@ -40,33 +42,35 @@ public class Interpreter {
 		if (command.contains("take")) {
 			possibleObjects = getObjects(term.args[0]);
 
-			//create a goal for every possible object that will fulfill the goal
+			// create a goal for every possible object that will fulfill the
+			// goal
 			for (ObjectInWorld o : possibleObjects) {
-				Goal g = new Goal(o, RelativePosition.HOLDING);		
+				Goal g = new Goal(o, RelativePosition.HOLDING);
 				g.setString(o.getId());
 				goals.add(g);
 			}
 		} else if (command.contains("move")) {
 			possibleObjects = getObjects(term.args[0]);
 			CompoundTerm relative = (CompoundTerm) term.args[1];
-			
 
 			if (relative.args[1].getTermType() == Term.ATOM) {
-				//Target = floor
+				// Target = floor
 				RelativePosition rp = RelativePosition.ONFLOOR;
 				for (ObjectInWorld o : possibleObjects) {
-					Goal g = new Goal(o, rp);		
+					Goal g = new Goal(o, rp);
 					g.setString(o.getId() + " " + rp.toString());
 					goals.add(g);
 				}
 			} else {
-				RelativePosition rp = RelativePosition.getrelativepositionValueFromString(getAtomString(relative.args[0]));
+				RelativePosition rp = RelativePosition
+						.getrelativepositionValueFromString(getAtomString(relative.args[0]));
 				ArrayList<ObjectInWorld> relativeObjects = getObjects(relative.args[1]);
 
 				for (ObjectInWorld o : possibleObjects) {
 					for (ObjectInWorld r : relativeObjects) {
-						Goal g = new Goal(o, rp, r);		
-						g.setString(o.getId() + " " + rp.toString() + " " + r.getId());
+						Goal g = new Goal(o, rp, r);
+						g.setString(o.getId() + " " + rp.toString() + " "
+								+ r.getId());
 						goals.add(g);
 					}
 				}
@@ -77,7 +81,9 @@ public class Interpreter {
 	}
 
 	/**
-	 * Returns a list of all objects in the world that fits the description given in the input Prolog-term.
+	 * Returns a list of all objects in the world that fits the description
+	 * given in the input Prolog-term.
+	 * 
 	 * @param term
 	 * @return
 	 */
@@ -87,24 +93,31 @@ public class Interpreter {
 		CompoundTerm compound = (CompoundTerm) term;
 
 		if (compound.tag.toString().contains("object")) {
-			Shape shape = Shape.getShapeValueFromString(getAtomString(compound.args[0]));
-			Size size = Size.getSizeValueFromString(getAtomString(compound.args[1]));
-			Colour color = Colour.getColourValueFromString(getAtomString(compound.args[2]));
+			Shape shape = Shape
+					.getShapeValueFromString(getAtomString(compound.args[0]));
+			Size size = Size
+					.getSizeValueFromString(getAtomString(compound.args[1]));
+			Colour color = Colour
+					.getColourValueFromString(getAtomString(compound.args[2]));
 
-			for (ArrayList<ObjectInWorld> a : world.getWorldRepresentationList()) {
-				for(ObjectInWorld obj : a) {
-					boolean suitable = true; //object fits description
+			for (ArrayList<ObjectInWorld> a : world
+					.getWorldRepresentationList()) {
+				for (ObjectInWorld obj : a) {
+					boolean suitable = true; // object fits description
 
-					if (!shape.equals(Shape.UNSPECIFIED) && !obj.getShape().equals(shape)) {
-						//wrong shape
+					if (!shape.equals(Shape.UNSPECIFIED)
+							&& !obj.getShape().equals(shape)) {
+						// wrong shape
 						suitable = false;
-					} else if (!size.equals(Size.UNSPECIFIED) && !obj.getSize().equals(size)) {
-						//wrong size
+					} else if (!size.equals(Size.UNSPECIFIED)
+							&& !obj.getSize().equals(size)) {
+						// wrong size
 						suitable = false;
-					} else if (!color.equals(Colour.UNSPECIFIED) && !obj.getColour().equals(color)) {
-						//wrong color
+					} else if (!color.equals(Colour.UNSPECIFIED)
+							&& !obj.getColour().equals(color)) {
+						// wrong color
 						suitable = false;
-					} 
+					}
 
 					if (suitable) {
 						returnList.add(obj);
@@ -112,14 +125,60 @@ public class Interpreter {
 				}
 			}
 		} else if (compound.tag.toString().contains("basic_entity")) {
-			//TODO: implement quantifier (arg 0)
-			return getObjects(compound.args[1]); //recursive call
+			switch (getAtomString(compound.args[0])) {		
+			case "the":
+				returnList.add(getObjects(compound.args[1]).get(0));
+				return returnList;
+			case "any":
+				returnList.add(getObjects(compound.args[1]).get(0));
+				return returnList; // TODO: Fix proper Any clause.
+			case "all":
+				return getObjects(compound.args[1]);
+			}
 		} else if (compound.tag.toString().contains("relative_entity")) {
-			//TODO: implement quantifier (arg 0)
+			// TODO: implement quantifier (arg 0)
 
 			ArrayList<ObjectInWorld> matchingObjects = getObjects(compound.args[1]);
 			return getRelative(matchingObjects, compound.args[2]);
-		} 
+
+			/*switch (getAtomString(compound.args[0])) {
+				case "The":
+					if (getObjects(compound.args[3]).contains(
+							getObjects(compound.args[1]).get(0))) {
+						returnList.add(getObjects(compound.args[1]).get(0));
+					}
+					return returnList;
+				case "Any":
+					if (getObjects(compound.args[3]).contains(
+							getObjects(compound.args[1]).get(0))) {
+						returnList.add(getObjects(compound.args[1]).get(0));
+					} // TODO: Fix proper Any clause.
+				case "All":
+					for (ObjectInWorld obj : getObjects(compound.args[1])) {
+						if (getObjects(compound.args[3]).contains(obj)) {
+							returnList.add(obj);
+						}
+					}
+					return returnList;
+			}*/
+		} /*else if (compound.tag.toString().contains("relative")) {
+			switch(getAtomString(compound.args[0])) {
+			case "inside": //TODO: Code (discuss tuesday/wednesday)
+				break;
+			case "beside": //TODO: Code (discuss tuesday/wednesday)
+				break;
+			case "ontop": //TODO: Code (discuss tuesday/wednesday)
+				break;
+			case "under": //TODO: Code (discuss tuesday/wednesday)
+				break; 
+			case "above": //TODO: Code (discuss tuesday/wednesday)
+				break;
+			case "leftof": //TODO: Code (discuss tuesday/wednesday)
+				break;
+			case "rightof": //TODO: Code (discuss tuesday/wednesday)
+				break;
+			}
+		}*/
 
 		return returnList;
 	}
@@ -133,8 +192,17 @@ public class Interpreter {
 	private ArrayList<ObjectInWorld> getRelative(ArrayList<ObjectInWorld> matchingObjects, Term relation) {
 		ArrayList<ObjectInWorld> returnList = new ArrayList<ObjectInWorld>();
 		CompoundTerm compound = (CompoundTerm) relation;
-		RelativePosition rp = RelativePosition.getrelativepositionValueFromString(getAtomString(compound.args[0]));	
-		ArrayList<ObjectInWorld> relativeObjects = getObjects(compound.args[1]);
+		RelativePosition rp = RelativePosition
+				.getrelativepositionValueFromString(getAtomString(compound.args[0]));
+		
+		ArrayList<ObjectInWorld> relativeObjects = new ArrayList<ObjectInWorld>();
+		if(compound.args[1].getTermType()==Term.COMPOUND) {
+			relativeObjects = getObjects(compound.args[1]);
+		} else {
+			if (rp==RelativePosition.ONTOP && getAtomString(compound.args[1]).equals("floor")) {
+				rp = RelativePosition.ONFLOOR;
+			}
+		}
 
 		for (ObjectInWorld o : matchingObjects) {
 			boolean stillMatching = world.checkRelation(o, rp, relativeObjects);
