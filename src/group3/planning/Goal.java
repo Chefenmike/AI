@@ -56,7 +56,7 @@ public class Goal {
 	}
 	
 	public boolean isFulfilled(World world) {
-		if (relativePosition.equals(RelativePosition.HOLDING)) {
+		if (relativePosition.equals(RelativePosition.HOLDING) && world.getHoldingObject() != null) {
 			return world.getHoldingObject().equals(objectToMove);
 		}
 		else {
