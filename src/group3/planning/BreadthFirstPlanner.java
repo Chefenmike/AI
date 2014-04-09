@@ -41,29 +41,31 @@ public class BreadthFirstPlanner {
 					workingCopyOfWorld.removeHolding();
 					for (int i = 0; i < workingCopyOfWorld.getWorldSize(); i++) {
 						tempWorld = new World(workingCopyOfWorld);
-						if(Rules.allowedMove(tempObjectInWorld, tempWorld.getFirstObjectInColumn(i))){
+						List<String> tempList = new ArrayList<String>();
+						if(tempWorld.getWorldRepresentationList().get(i).size() > 0) {
+							if(Rules.allowedMove(tempObjectInWorld, tempWorld.getFirstObjectInColumn(i))){
+								tempWorld.addObjectInWorldToColumn(i, tempObjectInWorld);
+								tempList = addPutToSearchPathList(entry.getValue(), i);
+							} 
+						} else {
 							tempWorld.addObjectInWorldToColumn(i, tempObjectInWorld);
-							List<String> tempList = addPutToSearchPathList(entry.getValue(), i);
-							if (goal.isFulfilled(tempWorld)) {
-								return new Plan(tempList);
+							tempList = addPutToSearchPathList(entry.getValue(), i);
 							}
-							newWorldList.put(tempWorld, tempList);	
-						}						
-					}
+						if (goal.isFulfilled(tempWorld)) {
+							return new Plan(tempList);
+						}
+						newWorldList.put(tempWorld, tempList);	
+					}						
 				} else {	
 					for (int i = 0; i < workingCopyOfWorld.getWorldSize(); i++) {
-						if(workingCopyOfWorld.getWorldRepresentationList().get(i).size() != 0) {
+						if(workingCopyOfWorld.getWorldRepresentationList().get(i).size() > 0) {
 							tempWorld = new World(workingCopyOfWorld);
+//							System.out.println("Kolumn " + i + " har storlek " + tempWorld.getWorldRepresentationList().get(i).size());
 							tempObjectInWorld = tempWorld.getFirstObjectInColumn(i);
 							tempWorld.removeTopObjectInColumn(i);
 							tempWorld.addObjectInWorldToHolding(tempObjectInWorld);
 							List<String> tempList = addPickToSearchPathList(entry.getValue(), i);
-							if(tempWorld.getHoldingObject().getColour() == Colour.BLACK && tempWorld.getHoldingObject().getShape() == Shape.BALL) {
-//								System.out.println("svart");
-							}
-//							System.out.println(tempWorld.getHoldingObject().getShape() + " " + tempWorld.getHoldingObject().getColour());
 							if (goal.isFulfilled(tempWorld)) {
-//								System.out.println("mål");
 								return new Plan(tempList);
 							}
 							newWorldList.put(tempWorld, tempList);

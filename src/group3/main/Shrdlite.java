@@ -109,15 +109,15 @@ public class Shrdlite {
 
 			World w = new World(world, holding, objects);
 			BreadthFirstPlanner bfp = new BreadthFirstPlanner(w);
-			ObjectInWorld oiw1 = new ObjectInWorld(Shape.BOX, Colour.YELLOW, Size.UNSPECIFIED, "k");
-			ObjectInWorld oiw2 = new ObjectInWorld(Shape.TABLE, Colour.BLUE, Size.UNSPECIFIED, "g");
-			Goal g = new Goal(oiw1, RelativePosition.BESIDE, oiw2);
+			ObjectInWorld oiw1 = new ObjectInWorld(Shape.BOX, Colour.BLUE, Size.SMALL, "m");
+			ObjectInWorld oiw2 = new ObjectInWorld(Shape.TABLE, Colour.BLUE, Size.LARGE, "g");
+			Goal g = new Goal(oiw1, RelativePosition.ONTOP, oiw2);
 			System.out.println("start");
 			Plan p = bfp.findSolution(g);
 			System.out.println(p.getPlan().toString());
 			
 			// Might be usefull later
-			/*
+			/*S
 			 * System.out.print("The world: " + world.toString() + "\n");
 			 * System.out.print("The utterance: " + utterance.toString() +
 			 * "\n"); System.out.print("Holding: " + holding.toString() + "\n");
