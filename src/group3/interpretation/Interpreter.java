@@ -100,9 +100,9 @@ public class Interpreter {
 			Colour color = Colour
 					.getColourValueFromString(getAtomString(compound.args[2]));
 
-			for (ArrayList<ObjectInWorld> a : world
-					.getWorldRepresentationList()) {
-				for (ObjectInWorld obj : a) {
+			//for (ArrayList<ObjectInWorld> a : world
+				//	.getWorldRepresentationList()) {
+				for (ObjectInWorld obj : world.getAllObjects()) {
 					boolean suitable = true; // object fits description
 
 					if (!shape.equals(Shape.UNSPECIFIED)
@@ -123,7 +123,7 @@ public class Interpreter {
 						returnList.add(obj);
 					}
 				}
-			}
+		//	}
 		} else if (compound.tag.toString().contains("basic_entity")) {
 			switch (getAtomString(compound.args[0])) {		
 			case "the":

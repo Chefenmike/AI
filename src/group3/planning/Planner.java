@@ -1,4 +1,6 @@
 package group3.planning;
+import javax.naming.TimeLimitExceededException;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -8,6 +10,10 @@ public class Planner {
 	private String holding;
 	private JSONObject objects;
 
+	public Planner() {
+		
+	}
+	
 	public Planner(JSONArray world, String holding, JSONObject objects) {
 		this.world=world;
 		this.holding=holding;
@@ -19,7 +25,7 @@ public class Planner {
 	 * @param goal The goal to be fulfilled
 	 * @return a Plan of how to solve the current problem
 	 */
-	public Plan solve(Goal goal) {
+	public Plan findSolution(Goal goal) throws TimeLimitExceededException {
 		// TODO Auto-generated method stub
 		Plan plan = new Plan();
 		

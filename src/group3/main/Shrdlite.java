@@ -17,6 +17,7 @@ package group3.main;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,7 +46,7 @@ import org.json.simple.JSONArray;
 
 public class Shrdlite {
 
-	private static boolean consoleTest = true;
+	private static boolean consoleTest = false;
 	private static boolean smallWorld = true;
 
 	public static void main(String[] args) throws PrologException,
@@ -125,6 +126,7 @@ public class Shrdlite {
 			 * System.out.print("Objects: " + objects.toString() + "\n");
 			 */
 		} else {
+			
 			jsinput = (JSONObject) JSONValue.parse(readFromStdin());
 			utterance = (JSONArray) jsinput.get("utterance");
 			world = (JSONArray) jsinput.get("world");
@@ -157,11 +159,9 @@ public class Shrdlite {
 			List<Goal> goals = new ArrayList();
 			Interpreter interpreter = new Interpreter(world, holding, objects);
 			for (Term tree : trees) {
-				for (Goal goal : interpreter.interpret(tree)) {
-					goals.add(goal);
-				}
-
+				goals.addAll(interpreter.interpret(tree));
 			}
+			//goals.addAll(interpreter.interpret(trees.get(1)));
 			result.put("goals", goals);
 
 			if (goals.isEmpty()) {
@@ -171,8 +171,8 @@ public class Shrdlite {
 				result.put("output", "Ambiguity error!");
 
 			} else {
-				Planner planner = new Planner(world, holding, objects);
-				Plan plan = planner.solve(goals.get(0));
+				Planner planner = new BreadthFirstPlanner(world, holding, objects);
+				Plan plan = planner.findSolution(goals.get(0));
 
 				result.put("plan", plan.getPlan());
 

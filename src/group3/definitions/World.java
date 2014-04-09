@@ -78,6 +78,24 @@ public class World {
 	public ArrayList<ArrayList<ObjectInWorld>> getWorldRepresentationList() {
 		return this.worldRepresentationList;
 	}
+	
+	/**
+	 * Returns a list of all objects in the world (including the object currently being held).
+	 * @return all objects in world.
+	 */
+	public ArrayList<ObjectInWorld> getAllObjects() {
+		ArrayList<ObjectInWorld> allObjects = new ArrayList<ObjectInWorld>();
+		
+		if (holding != null) {
+			allObjects.add(holding); //add object being held			
+		}
+		
+		for (ArrayList<ObjectInWorld> column : worldRepresentationList) {
+			allObjects.addAll(column);
+		}
+		
+		return allObjects;
+	}
 
 	public void addObjectInWorldToColumn(int column, ObjectInWorld oiw) {
 		this.getWorldRepresentationList().get(column).add(oiw);

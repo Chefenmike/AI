@@ -8,21 +8,31 @@ import java.util.Map;
 
 import javax.naming.TimeLimitExceededException;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import group3.definitions.Colour;
 import group3.definitions.ObjectInWorld;
 import group3.definitions.Shape;
 import group3.definitions.World;
 
-public class BreadthFirstPlanner {
+public class BreadthFirstPlanner extends Planner{
 
 	private World world;
 	private final Thread thisThread = Thread.currentThread();
 	private final int maxSearchTime = 10000;
 
 	public BreadthFirstPlanner(World world) {
+		super();
 		this.world = world;
 	}
+	
+	public BreadthFirstPlanner(JSONArray world, String holding, JSONObject objects) {
+		super(world, holding, objects);
+		this.world = new World(world, holding, objects);
+	}
 
+	@Override
 	public Plan findSolution(Goal goal) throws TimeLimitExceededException {
 		if (goal.isFulfilled(world))
 			return new Plan();
@@ -90,7 +100,7 @@ public class BreadthFirstPlanner {
 	private List<String> addPutToSearchPathList(List<String> src, int column) {
 //		Collections.copy(dst, src);
 		List<String> dst = new ArrayList<String>(src);
-		dst.add("put " + column);
+		dst.add("drop " + column);
 		return dst;
 	}
 	
