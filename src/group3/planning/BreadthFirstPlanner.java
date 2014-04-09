@@ -10,6 +10,7 @@ import javax.naming.TimeLimitExceededException;
 
 import group3.definitions.Colour;
 import group3.definitions.ObjectInWorld;
+import group3.definitions.Rules;
 import group3.definitions.Shape;
 import group3.definitions.World;
 
@@ -40,12 +41,14 @@ public class BreadthFirstPlanner {
 					workingCopyOfWorld.removeHolding();
 					for (int i = 0; i < workingCopyOfWorld.getWorldSize(); i++) {
 						tempWorld = new World(workingCopyOfWorld);
-						tempWorld.addObjectInWorldToColumn(i, tempObjectInWorld);
-						List<String> tempList = addPutToSearchPathList(entry.getValue(), i);
-						if (goal.isFulfilled(tempWorld)) {
-							return new Plan(tempList);
-						}
-						newWorldList.put(tempWorld, tempList);
+						if(Rules.allowedMove(tempObjectInWorld, tempWorld.getFirstObjectInColumn(i))){
+							tempWorld.addObjectInWorldToColumn(i, tempObjectInWorld);
+							List<String> tempList = addPutToSearchPathList(entry.getValue(), i);
+							if (goal.isFulfilled(tempWorld)) {
+								return new Plan(tempList);
+							}
+							newWorldList.put(tempWorld, tempList);	
+						}						
 					}
 				} else {	
 					for (int i = 0; i < workingCopyOfWorld.getWorldSize(); i++) {
