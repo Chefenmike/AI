@@ -46,7 +46,7 @@ import org.json.simple.JSONArray;
 
 public class Shrdlite {
 
-	private static boolean consoleTest = false;
+	private static boolean consoleTest = true;
 	private static boolean smallWorld = true;
 
 	public static void main(String[] args) throws PrologException,
@@ -57,8 +57,7 @@ public class Shrdlite {
 		JSONArray world;
 		String holding;
 		JSONObject objects;
-
-		String takeCmd = "";
+		
 		if (consoleTest) {
 			if (smallWorld) {
 				System.out
@@ -68,6 +67,25 @@ public class Shrdlite {
 			} else {
 				// Medium world here later
 			}
+			
+		}
+		
+while(consoleTest) {
+	
+
+		String takeCmd = "";
+		
+		if (consoleTest) {
+//			if (smallWorld) {
+//				System.out
+//						.print("The world: [\"e\"],[\"g\",\"l\"],[],[\"k\",\"m\",\"f\"],[] \n");
+//				System.out
+//						.print("The objects: \n{\"e\":{\"form\":\"ball\",\"size\":\"large\",\"color\":\"white\"},\"f\":{\"form\":\"ball\",\"size\":\"small\",\"color\":\"black\"},\"g\":{\"form\":\"table\",\"size\":\"large\",\"color\":\"blue\"},\n\"k\":{\"form\":\"box\",\"size\":\"large\",\"color\":\"yellow\"},\"l\":{\"form\":\"box\",\"size\":\"large\",\"color\":\"red\"},\"m\":{\"form\":\"box\",\"size\":\"small\",\"color\":\"blue\"}}\n");
+//			} else {
+//				// Medium world here later
+//			}
+//			
+			
 
 			System.out.print("What would you like me to do? \n");
 
@@ -107,7 +125,7 @@ public class Shrdlite {
 			utterance = (JSONArray) jsinput.get("utterance");
 			holding = (String) jsinput.get("holding");
 			objects = (JSONObject) jsinput.get("objects");
-			
+			/*
 			World w = new World(world, holding, objects);
 			BreadthFirstPlanner bfp = new BreadthFirstPlanner(w);
 			ObjectInWorld oiw1 = new ObjectInWorld(Shape.BOX, Colour.YELLOW, Size.UNSPECIFIED, "k");
@@ -116,7 +134,7 @@ public class Shrdlite {
 			System.out.println("start");
 			Plan p = bfp.findSolution(g);
 			System.out.println(p.getPlan().toString());
-			
+		*/	
 			// Might be usefull later
 			/*
 			 * System.out.print("The world: " + world.toString() + "\n");
@@ -143,7 +161,7 @@ public class Shrdlite {
 		// JSONObject objectinfo = (JSONObject) objects.get(topobject);
 		// String form = (String) objectinfo.get("form");
 
-		DCGParser parser = new DCGParser("C:\\Users\\Gustav\\Desktop\\Chalmers\\Artificial Intelligence\\Project\\AI\\src\\shrdlite_grammar.pl");
+		DCGParser parser = new DCGParser("C:\\Users\\Chefen\\workspace\\AI\\src\\shrdlite_grammar.pl");
 		List<Term> trees = parser.parseSentence("command", utterance);
 		List tstrs = new ArrayList();
 		result.put("trees", tstrs);
@@ -172,19 +190,21 @@ public class Shrdlite {
 			} else {
 				Planner planner = new BreadthFirstPlanner(world, holding, objects);
 				Plan plan = planner.findSolution(goals.get(0));
-
+				
 				result.put("plan", plan.getPlan());
 
 				if (plan.getPlan().isEmpty()) {
 					result.put("output", "Planning error!");
 				} else {
 					result.put("output", "Success!");
+					System.out.println(plan.getWorld().getWorldAsString());
 				}
 			}
 		}
 
-		System.out.print(result);
-	}
+		System.out.println(result);
+		//System.out.println(world);
+}	}
 
 	public static String readFromStdin() throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));

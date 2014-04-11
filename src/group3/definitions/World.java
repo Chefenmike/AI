@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 public class World {
 
@@ -284,4 +285,32 @@ public class World {
 		return false;
 	}
 	
+	/**
+	 * Returns current world as a string with a jsonobject-form.
+	 * 
+	 */
+	public String getWorldAsString() {
+
+		String s = "{\"world\":[";
+		for (int i = 0; i < worldRepresentationList.size(); i++) {
+			s += "[";
+			for (int j = 0; j < worldRepresentationList.get(i).size(); j++) {
+				s += "\"";
+				s += worldRepresentationList.get(i).get(j).getId();
+				s += "\"";
+				if (j != worldRepresentationList.get(i).size() - 1
+						&& worldRepresentationList.get(i).size() > 1) {
+					s += ",";
+				}
+			}
+			s += "]";
+			if (i != worldRepresentationList.get(i).size() - 1) {
+				s += ",";
+			}
+		}
+		s += "]}";
+		s += "\n Holding: " + holding.getId();
+		return s;
+	}
+
 }
