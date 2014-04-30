@@ -38,6 +38,7 @@ import group3.planning.BreadthFirstPlanner;
 import group3.planning.Goal;
 import group3.planning.Plan;
 import group3.planning.Planner;
+import group3.utils.AbsolutePaths;
 
 import org.json.simple.parser.ParseException;
 import org.json.simple.JSONValue;
@@ -161,7 +162,7 @@ while(consoleTest) {
 		// JSONObject objectinfo = (JSONObject) objects.get(topobject);
 		// String form = (String) objectinfo.get("form");
 
-		DCGParser parser = new DCGParser("C:\\Users\\Chefen\\workspace\\AI\\src\\shrdlite_grammar.pl");
+		DCGParser parser = new DCGParser(AbsolutePaths.DCGPARSERFILE);
 		List<Term> trees = parser.parseSentence("command", utterance);
 		List tstrs = new ArrayList();
 		result.put("trees", tstrs);

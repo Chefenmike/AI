@@ -17,9 +17,10 @@ import gnu.prolog.vm.Interpreter.Goal;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import gnu.prolog.vm.TermConstants;
+import group3.utils.AbsolutePaths;
 
 public class DCGParser {
-    private static final String prologParserFile = "C:\\Users\\Chefen\\workspace\\AI\\src\\dcg_parser.pl";
+    private static final String prologParserFile = AbsolutePaths.PROLOGPARSERFILE;
 
 	private static Environment env;
 	private static Interpreter interpreter;
