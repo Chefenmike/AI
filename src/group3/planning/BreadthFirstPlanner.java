@@ -35,7 +35,7 @@ public class BreadthFirstPlanner extends Planner {
 	}
 
 	@Override
-	public Plan findSolution(Goal goal) throws TimeLimitExceededException {
+	public Plan findSolution(CompositeGoal goal) throws TimeLimitExceededException {
 		if (goal.isFulfilled(world))
 			return new Plan();
 		Map<World, List<String>> worldList = new HashMap<World, List<String>>();

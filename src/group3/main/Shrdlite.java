@@ -17,7 +17,6 @@ package group3.main;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,15 +25,10 @@ import javax.naming.TimeLimitExceededException;
 
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.PrologException;
-import group3.definitions.Colour;
-import group3.definitions.ObjectInWorld;
-import group3.definitions.RelativePosition;
-import group3.definitions.Shape;
-import group3.definitions.Size;
-import group3.definitions.World;
 import group3.interpretation.Interpreter;
 import group3.parsing.DCGParser;
 import group3.planning.BreadthFirstPlanner;
+import group3.planning.CompositeGoal;
 import group3.planning.Goal;
 import group3.planning.Plan;
 import group3.planning.Planner;
@@ -77,17 +71,6 @@ while(consoleTest) {
 		String takeCmd = "";
 		
 		if (consoleTest) {
-//			if (smallWorld) {
-//				System.out
-//						.print("The world: [\"e\"],[\"g\",\"l\"],[],[\"k\",\"m\",\"f\"],[] \n");
-//				System.out
-//						.print("The objects: \n{\"e\":{\"form\":\"ball\",\"size\":\"large\",\"color\":\"white\"},\"f\":{\"form\":\"ball\",\"size\":\"small\",\"color\":\"black\"},\"g\":{\"form\":\"table\",\"size\":\"large\",\"color\":\"blue\"},\n\"k\":{\"form\":\"box\",\"size\":\"large\",\"color\":\"yellow\"},\"l\":{\"form\":\"box\",\"size\":\"large\",\"color\":\"red\"},\"m\":{\"form\":\"box\",\"size\":\"small\",\"color\":\"blue\"}}\n");
-//			} else {
-//				// Medium world here later
-//			}
-//			
-			
-
 			System.out.print("What would you like me to do? \n");
 
 			try {
@@ -179,18 +162,19 @@ while(consoleTest) {
 			for (Term tree : trees) {
 				goals.addAll(interpreter.interpret(tree));
 			}
-			//goals.addAll(interpreter.interpret(trees.get(1)));
 			result.put("goals", goals);
 
 			if (goals.isEmpty()) {
 				result.put("output", "Interpretation error!");
 
-			} else if (goals.size() > 1) {
-				result.put("output", "Ambiguity error!");
+			//} else if (goals.size() > 1) {
+				//result.put("output", "Ambiguity error!");
 
 			} else {
 				Planner planner = new BreadthFirstPlanner(world, holding, objects);
-				Plan plan = planner.findSolution(goals.get(0));
+				CompositeGoal compositeGoal = new CompositeGoal();
+				compositeGoal.addAllGoals(goals);
+				Plan plan = planner.findSolution(compositeGoal);
 				
 				result.put("plan", plan.getPlan());
 

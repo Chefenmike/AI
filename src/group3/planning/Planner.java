@@ -25,7 +25,7 @@ public class Planner {
 	 * @param goal The goal to be fulfilled
 	 * @return a Plan of how to solve the current problem
 	 */
-	public Plan findSolution(Goal goal) throws TimeLimitExceededException {
+	public Plan findSolution(CompositeGoal goal) throws TimeLimitExceededException {
 		// TODO Auto-generated method stub
 		Plan plan = new Plan();
 		

@@ -134,7 +134,7 @@ public class Interpreter {
 				returnList.add(getObjects(compound.args[1]).get(0));
 				return returnList;
 			case "any":
-				returnList.add(getObjects(compound.args[1]).get(0));
+				returnList.addAll(getObjects(compound.args[1]));
 				return returnList; // TODO: Fix proper Any clause.
 			case "all":
 				return getObjects(compound.args[1]);

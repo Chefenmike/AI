@@ -5,7 +5,7 @@ import group3.definitions.ObjectInWorld;
 import group3.definitions.RelativePosition;
 import group3.definitions.World;
 
-public class Goal {
+public class Goal extends CompositeGoal{
 	
 	private ObjectInWorld objectToMove;
 	private Location location;
