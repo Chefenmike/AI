@@ -102,15 +102,18 @@ public class BreadthFirstPlanner extends Planner {
 	}
 
 	private void startNewThread() {
-		new Thread(new Runnable() {
+		new Thread(new Runnable() {	
 			public void run() {
+				while(!Thread.currentThread().isInterrupted()){
 				try {
 					java.lang.Thread.sleep(maxSearchTime);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					Thread.currentThread().interrupt();
+					return;
+					}
 				}
-				thisThread.interrupt();
 			}
 		}).start();
 	}
