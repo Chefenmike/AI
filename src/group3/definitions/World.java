@@ -309,7 +309,12 @@ public class World {
 			}
 		}
 		s += "]}";
-		s += "\n Holding: " + holding.getId();
+		if(holding != null) {
+			s += "\n Holding: " + holding.getId();
+		} else {
+			s += "\n Holding: null";
+		}
+		
 		return s;
 	}
 

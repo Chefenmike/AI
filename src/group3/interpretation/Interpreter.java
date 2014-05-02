@@ -27,6 +27,10 @@ public class Interpreter {
 		this.world = new World(world, holding, objects);
 	}
 
+	public Interpreter(World currentWorld) {
+		this.world = currentWorld;
+	}
+
 	/**
 	 * Converts a tree to a list of goals.
 	 * 
