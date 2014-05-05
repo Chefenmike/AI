@@ -61,17 +61,18 @@ public class BreadthFirstPlanner extends Planner {
 										tempObjectInWorld);
 								tempList = addPutToSearchPathList(
 										entry.getValue(), i);
-							}
+								newWorldList.put(tempWorld, tempList);
+							} 
 						} else {
 							tempWorld.addObjectInWorldToColumn(i,
 									tempObjectInWorld);
 							tempList = addPutToSearchPathList(entry.getValue(),
 									i);
+							newWorldList.put(tempWorld, tempList);
 						}
 						if (goal.isFulfilled(tempWorld)) {
 							return new Plan(tempList,tempWorld);
 						}
-						newWorldList.put(tempWorld, tempList);
 					}
 				} else {
 					for (int i = 0; i < workingCopyOfWorld.getWorldSize(); i++) {

@@ -3,6 +3,7 @@ package group3.planning;
 import group3.definitions.Location;
 import group3.definitions.ObjectInWorld;
 import group3.definitions.RelativePosition;
+import group3.definitions.Rules;
 import group3.definitions.World;
 
 public class Goal extends CompositeGoal{
@@ -73,5 +74,13 @@ public class Goal extends CompositeGoal{
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Returns true if this goal is possible according to the rules of the world.
+	 * @return
+	 */
+	public boolean isAllowed() {
+		return Rules.allowedMove(objectToMove, relativePosition, otherObject);
 	}
 }

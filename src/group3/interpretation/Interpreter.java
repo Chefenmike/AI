@@ -84,6 +84,15 @@ public class Interpreter {
 				}
 			}
 		}
+		
+		//Check if goal is possible according to rules of the world:
+		List<Goal> toBeRemoved = new ArrayList<Goal>();
+		for (Goal g : goals) {
+			if (!g.isAllowed()) {
+				toBeRemoved.add(g);
+			}
+		}
+		goals.removeAll(toBeRemoved);
 
 		return goals;
 	}
