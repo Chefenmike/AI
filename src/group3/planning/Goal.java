@@ -1,6 +1,4 @@
 package group3.planning;
-
-import group3.definitions.Location;
 import group3.definitions.ObjectInWorld;
 import group3.definitions.RelativePosition;
 import group3.definitions.Rules;
@@ -9,18 +7,12 @@ import group3.definitions.World;
 public class Goal extends CompositeGoal{
 	
 	private ObjectInWorld objectToMove;
-	private Location location;
 	private RelativePosition relativePosition;
 	private ObjectInWorld otherObject;
 	private String outputString = "";
 	
 	public Goal() {
 		
-	}
-	
-	public Goal(ObjectInWorld target, Location location) {
-		this.objectToMove = target;
-		this.location = location;
 	}
 	
 	public Goal(ObjectInWorld objectToMove, RelativePosition relativePosition, ObjectInWorld otherObject) {
@@ -38,10 +30,6 @@ public class Goal extends CompositeGoal{
 		return this.objectToMove;
 	}
 	
-	public Location GetLocationToMoveTo() {
-		return this.location;
-	}
-	
 	public void setString(String s) {
 		this.outputString = s;
 	}
@@ -52,10 +40,12 @@ public class Goal extends CompositeGoal{
 	 */
 	@Override
 	public String toString() {
-		//TODO implement
 		return "\""+ outputString +"\"";
 	}
 
+	/**
+	 * Return true if the goal is fulfilled in the world given as parameter
+	 */
 	public boolean isFulfilled(World world) {
 		if (relativePosition.equals(RelativePosition.HOLDING) && world.getHoldingObject() != null) {
 			return world.getHoldingObject().equals(objectToMove);
@@ -77,7 +67,7 @@ public class Goal extends CompositeGoal{
 	}
 
 	/**
-	 * Returns true if this goal is possible according to the rules of the world.
+	 * Returns true if this goal is possible to fulfill according to the rules of the world.
 	 * @return
 	 */
 	public boolean isAllowed() {

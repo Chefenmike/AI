@@ -79,22 +79,22 @@ public class World {
 	public ArrayList<ArrayList<ObjectInWorld>> getWorldRepresentationList() {
 		return this.worldRepresentationList;
 	}
-	
+
 	/**
 	 * Returns a list of all objects in the world (including the object currently being held).
 	 * @return all objects in world.
 	 */
 	public ArrayList<ObjectInWorld> getAllObjects() {
 		ArrayList<ObjectInWorld> allObjects = new ArrayList<ObjectInWorld>();
-		
+
 		if (holding != null) {
 			allObjects.add(holding); //add object being held			
 		}
-		
+
 		for (ArrayList<ObjectInWorld> column : worldRepresentationList) {
 			allObjects.addAll(column);
 		}
-		
+
 		return allObjects;
 	}
 
@@ -103,8 +103,13 @@ public class World {
 	}
 
 	public ObjectInWorld getFirstObjectInColumn(int column) {
-		return this.getWorldRepresentationList().get(column).
-				get(this.getWorldRepresentationList().get(column).size() - 1);
+		if (this.getWorldRepresentationList().get(column).size()==0) {
+			//column empty
+			return null;
+		} else {
+			return this.getWorldRepresentationList().get(column).
+					get(this.getWorldRepresentationList().get(column).size() - 1);
+		}
 	}
 
 	public void removeTopObjectInColumn(int column) {
@@ -116,7 +121,7 @@ public class World {
 		holding = oiw;
 	}
 
-	
+
 
 	/**
 	 * Checks whether the relative position rp exists between object1 and any of the objects in the list otherObjects.
@@ -160,7 +165,7 @@ public class World {
 
 		return false;
 	}
-	
+
 	/**
 	 * Checks unary relations (on floor)
 	 * @param object1
@@ -191,7 +196,7 @@ public class World {
 			return false;
 		}
 	}
-	
+
 	public boolean isOnTopOf(ObjectInWorld b, ObjectInWorld a){
 		for(ArrayList<ObjectInWorld> objList : worldRepresentationList){
 			for(int i = 0; i < objList.size(); i++){
@@ -249,7 +254,7 @@ public class World {
 						return worldRepresentationList.get(i-1).contains(b);
 					} else {
 						return (worldRepresentationList.get(i-1).contains(b) || worldRepresentationList.get(i+1).contains(b));
-				
+
 					}
 				}
 			}
@@ -284,7 +289,7 @@ public class World {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns current world as a string with a jsonobject-form.
 	 * 
@@ -314,7 +319,7 @@ public class World {
 		} else {
 			s += "\n Holding: null";
 		}
-		
+
 		return s;
 	}
 

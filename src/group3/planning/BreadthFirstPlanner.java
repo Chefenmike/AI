@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 
 import group3.definitions.Colour;
 import group3.definitions.ObjectInWorld;
+import group3.definitions.RelativePosition;
 import group3.definitions.Rules;
 import group3.definitions.Shape;
 import group3.definitions.World;
@@ -53,21 +54,12 @@ public class BreadthFirstPlanner extends Planner {
 					for (int i = 0; i < workingCopyOfWorld.getWorldSize(); i++) {
 						tempWorld = new World(workingCopyOfWorld);
 						List<String> tempList = new ArrayList<String>();
-						if (tempWorld.getWorldRepresentationList().get(i)
-								.size() > 0) {
-							if (Rules.allowedMove(tempObjectInWorld,
-									tempWorld.getFirstObjectInColumn(i))) {
-								tempWorld.addObjectInWorldToColumn(i,
-										tempObjectInWorld);
-								tempList = addPutToSearchPathList(
-										entry.getValue(), i);
-								newWorldList.put(tempWorld, tempList);
-							} 
-						} else {
+						if (Rules.allowedMove(tempObjectInWorld, RelativePosition.UNSPECIFIED,
+								tempWorld.getFirstObjectInColumn(i))) {
 							tempWorld.addObjectInWorldToColumn(i,
 									tempObjectInWorld);
-							tempList = addPutToSearchPathList(entry.getValue(),
-									i);
+							tempList = addPutToSearchPathList(
+									entry.getValue(), i);
 							newWorldList.put(tempWorld, tempList);
 						}
 						if (goal.isFulfilled(tempWorld)) {
@@ -86,7 +78,7 @@ public class BreadthFirstPlanner extends Planner {
 									.getFirstObjectInColumn(i);
 							tempWorld.removeTopObjectInColumn(i);
 							tempWorld
-									.addObjectInWorldToHolding(tempObjectInWorld);
+							.addObjectInWorldToHolding(tempObjectInWorld);
 							List<String> tempList = addPickToSearchPathList(
 									entry.getValue(), i);
 							if (goal.isFulfilled(tempWorld)) {
@@ -106,13 +98,13 @@ public class BreadthFirstPlanner extends Planner {
 		new Thread(new Runnable() {	
 			public void run() {
 				while(!Thread.currentThread().isInterrupted()){
-				try {
-					java.lang.Thread.sleep(maxSearchTime);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					Thread.currentThread().interrupt();
-					return;
+					try {
+						java.lang.Thread.sleep(maxSearchTime);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						Thread.currentThread().interrupt();
+						return;
 					}
 				}
 			}

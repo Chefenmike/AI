@@ -4,12 +4,12 @@ public class Rules {
 
 	/**
 	 * Checks whether objectToMove is allowed ontop/inside destinationObject
-	 * TODO: make this method private
+	 * I reworked this method a bit so that it doesn't return true until all rules have been checked /Gustav.
 	 * @param objectToMove
 	 * @param destinationObject
 	 * @return
 	 */
-	public static boolean allowedMove(ObjectInWorld objectToMove,
+	private static boolean allowedMove(ObjectInWorld objectToMove,
 			ObjectInWorld destinationObject) {
 				if(objectToMove.getShape().equals(Shape.BALL) && !destinationObject.getShape().equals(Shape.BOX)){
 					//balls must be in boxes (or on the floor)
@@ -27,24 +27,30 @@ public class Rules {
 						return false;
 					} 
 				} if (objectToMove.getShape().equals(Shape.BOX)) {
-					if(objectToMove.getSize().equals(Size.SMALL)){
-						if(destinationObject.getShape().equals(Shape.TABLE) || destinationObject.getShape().equals(Shape.PLANK)){
-							return (objectToMove.getSize().equals(destinationObject.getSize()));
-						} else {
-							return false;
-						}
-					} else {
-						if(destinationObject.getShape().equals(Shape.TABLE) || destinationObject.getShape().equals(Shape.PLANK) || destinationObject.getShape().equals(Shape.BRICK)){
-							return (objectToMove.getSize().equals(destinationObject.getSize()));
-						} else {
-							return false;
-						}
+					//Boxes can only be supported by tables or planks of the same size, 
+					//but large boxes can also be supported by large bricks.
+					if (!objectToMove.getSize().equals(destinationObject.getSize())) {
+						//both the box and the other object needs to be of the same size
+						return false;
+					} else if(!(destinationObject.getShape().equals(Shape.TABLE) || destinationObject.getShape().equals(Shape.PLANK) || destinationObject.getShape().equals(Shape.BRICK))) {
+						//only tables, planks and bricks can support boxes
+						return false;
+					} else if (destinationObject.getShape().equals(Shape.BRICK) && destinationObject.getSize().equals(Size.SMALL)) {
+						//Small bricks cannot support any boxes
+						return false;
 					}
 				}
  			
-		return true;
+		return true; //all rules fulfilled
 	}	
 	
+	/**
+	 * Checks whether a certain move is allowed
+	 * @param objectToMove 
+	 * @param relativePosition the relation that objectToMove has to destinationObject
+	 * @param destinationObject
+	 * @return
+	 */
 	public static boolean allowedMove(ObjectInWorld objectToMove, RelativePosition relativePosition,
 			ObjectInWorld destinationObject) {
 		if (relativePosition.equals(RelativePosition.HOLDING)) {
@@ -67,6 +73,14 @@ public class Rules {
 			return !objectToMove.getShape().equals(Shape.BALL) && !(destinationObject.getSize().equals(Size.LARGE) && objectToMove.getSize().equals(Size.SMALL));
 		} else if (relativePosition.equals(RelativePosition.BESIDE)) {
 			return true;
+		} else if (relativePosition.equals(RelativePosition.UNSPECIFIED) && destinationObject==null) {
+			//Corresponds to either a pick up or put on floor action,
+			//since these are the only actions with only one object involved
+			return true;
+		} else if (relativePosition.equals(RelativePosition.UNSPECIFIED)) {
+			//Corresponds to either a put ontop or a put inside action,
+			//depending on whether destinationobject is a box or not
+			return allowedMove(objectToMove, destinationObject);
 		} else {
 			return false;
 		}
