@@ -2,18 +2,29 @@ package group3.definitions;
 
 public class Rules {
 
+	/**
+	 * Checks whether objectToMove is allowed ontop/inside destinationObject
+	 * TODO: make this method private
+	 * @param objectToMove
+	 * @param destinationObject
+	 * @return
+	 */
 	public static boolean allowedMove(ObjectInWorld objectToMove,
 			ObjectInWorld destinationObject) {
 				if(objectToMove.getShape().equals(Shape.BALL) && !destinationObject.getShape().equals(Shape.BOX)){
+					//balls must be in boxes (or on the floor)
 					return false;
 					//return (destinationObject.getShape().equals(Shape.BOX) || destinationObject.getShape().equals(Shape.FLOOR));
 				} if (destinationObject.getShape().equals(Shape.BALL)) {
+					//balls cannot support anything
 					return false;
 				} if (destinationObject.getSize().equals(Size.SMALL) && objectToMove.getSize().equals(Size.LARGE)){
+					//small objects cannot support large objects
 					return false;
-				} if (destinationObject.getShape().equals(Shape.BOX)) {
+				} if (destinationObject.getShape().equals(Shape.BOX) && objectToMove.getSize().equals(destinationObject.getSize())) {
 					if (objectToMove.getShape().equals(Shape.PYRAMID) || objectToMove.getShape().equals(Shape.PLANK)){
-						return (!objectToMove.getSize().equals(destinationObject.getSize()));
+						//boxes cannot contain pyramids or planks of the same size
+						return false;
 					} 
 				} if (objectToMove.getShape().equals(Shape.BOX)) {
 					if(objectToMove.getSize().equals(Size.SMALL)){
@@ -37,8 +48,10 @@ public class Rules {
 	public static boolean allowedMove(ObjectInWorld objectToMove, RelativePosition relativePosition,
 			ObjectInWorld destinationObject) {
 		if (relativePosition.equals(RelativePosition.HOLDING)) {
+			//all objects can be picked up
 			return true;
 		} else if (relativePosition.equals(RelativePosition.ONFLOOR)) {
+			//all objects can be placed on the floor
 			return true;
 		} else if (relativePosition.equals(RelativePosition.ONTOP)) {
 			//Destination object cannot be a box

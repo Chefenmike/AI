@@ -73,7 +73,7 @@ public class Interpreter {
 
 				for (ObjectInWorld o : possibleObjects) {
 					for (ObjectInWorld r : relativeObjects) {
-						if(Rules.allowedMove(o, r)){
+						if(Rules.allowedMove(o, rp, r)){
 							Goal g = new Goal(o, rp, r);
 							g.setString(o.getId() + " " + rp.toString() + " "
 									+ r.getId());
@@ -86,13 +86,13 @@ public class Interpreter {
 		}
 		
 		//Check if goal is possible according to rules of the world:
-		List<Goal> toBeRemoved = new ArrayList<Goal>();
+		/*List<Goal> toBeRemoved = new ArrayList<Goal>();
 		for (Goal g : goals) {
 			if (!g.isAllowed()) {
 				toBeRemoved.add(g);
 			}
 		}
-		goals.removeAll(toBeRemoved);
+		goals.removeAll(toBeRemoved);*/
 
 		return goals;
 	}

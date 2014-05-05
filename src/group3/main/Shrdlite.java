@@ -45,7 +45,8 @@ public class Shrdlite {
 	private static World currentWorld;
 
 	private static boolean consoleTest = true;
-	private static boolean smallWorld = true;
+	private static String worldPath = "examples\\small.json";
+	//private static String worldPath = "examples\\medium.json";
 
 	public static void main(String[] args) throws PrologException,
 			ParseException, IOException, TimeLimitExceededException {
@@ -58,12 +59,8 @@ public class Shrdlite {
 
 		if (consoleTest) {
 			String command = "[]";
-			if (smallWorld) {
-				jsinput = (JSONObject) JSONValue.parse(readFromFile("examples\\small.json"));
-			} else {
-				jsinput = (JSONObject) JSONValue.parse(readFromFile("examples\\medium.json"));
-			}
-
+			jsinput = (JSONObject) JSONValue.parse(readFromFile(worldPath));
+			
 			world = (JSONArray) jsinput.get("world");
 			utterance = (JSONArray) jsinput.get("utterance");
 			holding = (String) jsinput.get("holding");
