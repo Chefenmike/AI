@@ -79,7 +79,7 @@ public class Shrdlite {
 		}
 		JSONObject result = new JSONObject();
 
-		result.put("utterance", utterance);
+		//result.put("utterance", utterance);
 
 		while (consoleTest) {
 			System.out.print("What would you like me to do? \n");
@@ -99,6 +99,7 @@ public class Shrdlite {
 			for (int i = 0; i < out.length; i++) {
 				lista.add(out[i]);
 			}
+			result.put("utterance", lista);
 
 			// // This is how to get information about the top object in column
 			// 1:
