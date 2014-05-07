@@ -1,4 +1,4 @@
-package group3.definitions;
+package group3.world.definitions;
 
 public enum Shape {
 	BALL("ball"), BOX("box"), BRICK("brick"), FLOOR("floor"), PYRAMID("pyramid"), TABLE("table"), PLANK("plank"), UNSPECIFIED("anyform");

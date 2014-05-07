@@ -11,12 +11,12 @@ import javax.naming.TimeLimitExceededException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import group3.definitions.Colour;
-import group3.definitions.ObjectInWorld;
-import group3.definitions.RelativePosition;
-import group3.definitions.Rules;
-import group3.definitions.Shape;
-import group3.definitions.World;
+import group3.world.ObjectInWorld;
+import group3.world.RelativePosition;
+import group3.world.Rules;
+import group3.world.World;
+import group3.world.definitions.Colour;
+import group3.world.definitions.Shape;
 
 public class BreadthFirstPlanner extends Planner {
 

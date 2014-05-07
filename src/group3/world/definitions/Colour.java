@@ -1,4 +1,4 @@
-package group3.definitions;
+package group3.world.definitions;
 
 public enum Colour {
 	WHITE("white"), BLACK("black"), RED("red"), GREEN("green"), BLUE("blue"), YELLOW("yellow"), UNSPECIFIED("(-)");

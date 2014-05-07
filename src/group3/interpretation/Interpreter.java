@@ -6,14 +6,15 @@ import java.util.List;
 import gnu.prolog.term.AtomicTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.term.CompoundTerm;
-import group3.definitions.Colour;
-import group3.definitions.ObjectInWorld;
-import group3.definitions.RelativePosition;
-import group3.definitions.Rules;
-import group3.definitions.Shape;
-import group3.definitions.Size;
-import group3.definitions.World;
+import group3.planning.CompositeGoal;
 import group3.planning.Goal;
+import group3.world.ObjectInWorld;
+import group3.world.RelativePosition;
+import group3.world.Rules;
+import group3.world.World;
+import group3.world.definitions.Colour;
+import group3.world.definitions.Shape;
+import group3.world.definitions.Size;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -38,9 +39,9 @@ public class Interpreter {
 	 *            The tree to be interpreted as goals.
 	 * @return a list of all possible interpretations of the tree.
 	 */
-	public List<Goal> interpret(Term tree) {
+	public List<CompositeGoal> interpret(Term tree) {
 		CompoundTerm term = (CompoundTerm) tree;
-		List<Goal> goals = new ArrayList<Goal>();
+		List<CompositeGoal> goals = new ArrayList<CompositeGoal>();
 		ArrayList<ObjectInWorld> possibleObjects = new ArrayList<ObjectInWorld>();
 
 		String command = term.tag.toString();
@@ -49,11 +50,13 @@ public class Interpreter {
 
 			// create a goal for every possible object that will fulfill the
 			// goal
+			CompositeGoal compositeGoal = new CompositeGoal();
 			for (ObjectInWorld o : possibleObjects) {
 				Goal g = new Goal(o, RelativePosition.HOLDING);
 				g.setString(o.getId());
-				goals.add(g);
+				compositeGoal.addGoal(g);
 			}
+			goals.add(compositeGoal);
 		} else if (command.contains("move")) {
 			possibleObjects = getObjects(term.args[0]);
 			CompoundTerm relative = (CompoundTerm) term.args[1];
@@ -61,27 +64,31 @@ public class Interpreter {
 			if (relative.args[1].getTermType() == Term.ATOM) {
 				// Target = floor
 				RelativePosition rp = RelativePosition.ONFLOOR;
+				CompositeGoal compositeGoal = new CompositeGoal();
 				for (ObjectInWorld o : possibleObjects) {
 					Goal g = new Goal(o, rp);
 					g.setString(o.getId() + " " + rp.toString());
-					goals.add(g);
+					compositeGoal.addGoal(g);
 				}
+				goals.add(compositeGoal);
 			} else {
 				RelativePosition rp = RelativePosition
 						.getrelativepositionValueFromString(getAtomString(relative.args[0]));
 				ArrayList<ObjectInWorld> relativeObjects = getObjects(relative.args[1]);
 
+				CompositeGoal compositeGoal = new CompositeGoal();
 				for (ObjectInWorld o : possibleObjects) {
 					for (ObjectInWorld r : relativeObjects) {
 						if(Rules.allowedMove(o, rp, r)){
 							Goal g = new Goal(o, rp, r);
 							g.setString(o.getId() + " " + rp.toString() + " "
 									+ r.getId());
-							goals.add(g);
+							compositeGoal.addGoal(g);
 						
 						}
 					}
 				}
+				goals.add(compositeGoal);
 			}
 		}
 		
@@ -117,8 +124,6 @@ public class Interpreter {
 			Colour color = Colour
 					.getColourValueFromString(getAtomString(compound.args[2]));
 
-			//for (ArrayList<ObjectInWorld> a : world
-				//	.getWorldRepresentationList()) {
 				for (ObjectInWorld obj : world.getAllObjects()) {
 					boolean suitable = true; // object fits description
 
@@ -140,7 +145,6 @@ public class Interpreter {
 						returnList.add(obj);
 					}
 				}
-		//	}
 		} else if (compound.tag.toString().contains("basic_entity")) {
 			switch (getAtomString(compound.args[0])) {		
 			case "the":
@@ -148,7 +152,7 @@ public class Interpreter {
 				return returnList;
 			case "any":
 				returnList.addAll(getObjects(compound.args[1]));
-				return returnList; // TODO: Fix proper Any clause.
+				return returnList; 
 			case "all":
 				return getObjects(compound.args[1]);
 			}
@@ -159,7 +163,6 @@ public class Interpreter {
 				matchingObjects.add(getObjects(compound.args[1]).get(0));
 				return getRelative(matchingObjects, compound.args[2]);
 			case "any":
-				//TODO: fix proper any clause
 				matchingObjects.addAll(getObjects(compound.args[1]));
 				return getRelative(matchingObjects, compound.args[2]);
 			case "all":

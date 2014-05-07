@@ -1,6 +1,10 @@
-package group3.definitions;
+package group3.world;
 
-public class ObjectInWorld {
+import group3.world.definitions.Colour;
+import group3.world.definitions.Shape;
+import group3.world.definitions.Size;
+
+public class ObjectInWorld implements ObjectInterface {
 	
 	private Shape shape;
 	private Colour colour;

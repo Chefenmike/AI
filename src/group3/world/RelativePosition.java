@@ -1,4 +1,4 @@
-package group3.definitions;
+package group3.world;
 
 public enum RelativePosition {
 	ONTOP("ontop"), INSIDE("inside"), ABOVE("above"), UNDER("under"), BESIDE("beside"), HOLDING("holding"), ONFLOOR("onfloor"), UNSPECIFIED("(-)");

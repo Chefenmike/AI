@@ -1,8 +1,8 @@
 package group3.planning;
-import group3.definitions.ObjectInWorld;
-import group3.definitions.RelativePosition;
-import group3.definitions.Rules;
-import group3.definitions.World;
+import group3.world.ObjectInWorld;
+import group3.world.RelativePosition;
+import group3.world.Rules;
+import group3.world.World;
 
 public class Goal extends CompositeGoal{
 	

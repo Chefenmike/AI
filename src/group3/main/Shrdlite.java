@@ -26,7 +26,6 @@ import javax.naming.TimeLimitExceededException;
 
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.PrologException;
-import group3.definitions.World;
 import group3.interpretation.Interpreter;
 import group3.parsing.DCGParser;
 import group3.planning.BreadthFirstPlanner;
@@ -35,6 +34,7 @@ import group3.planning.Goal;
 import group3.planning.Plan;
 import group3.planning.Planner;
 import group3.utils.AbsolutePaths;
+import group3.world.World;
 
 import org.json.simple.parser.ParseException;
 import org.json.simple.JSONValue;
@@ -49,7 +49,7 @@ public class Shrdlite {
 	//private static String worldPath = "examples\\medium.json";
 
 	public static void main(String[] args) throws PrologException,
-			ParseException, IOException, TimeLimitExceededException {
+	ParseException, IOException, TimeLimitExceededException {
 		JSONObject jsinput;
 
 		JSONArray utterance;
@@ -60,7 +60,7 @@ public class Shrdlite {
 		if (consoleTest) {
 			String command = "[]";
 			jsinput = (JSONObject) JSONValue.parse(readFromFile(worldPath));
-			
+
 			world = (JSONArray) jsinput.get("world");
 			utterance = (JSONArray) jsinput.get("utterance");
 			holding = (String) jsinput.get("holding");
@@ -117,24 +117,24 @@ public class Shrdlite {
 				result.put("output", "Parse error!");
 
 			} else {
-				List<Goal> goals = new ArrayList();
+				List<CompositeGoal> goals = new ArrayList();
 				Interpreter interpreter = new Interpreter(currentWorld);
 				for (Term tree : trees) {
 					goals.addAll(interpreter.interpret(tree));
 				}
-				result.put("goals", goals);
+				result.put("goals", goals.get(0));
 
 				if (goals.isEmpty()) {
 					result.put("output", "Interpretation error!");
 
-					// } else if (goals.size() > 1) {
-					// result.put("output", "Ambiguity error!");
+				} else if (goals.size() > 1) {
+					result.put("output", "Ambiguity error!");
 
 				} else {
 					Planner planner = new BreadthFirstPlanner(currentWorld);
-					CompositeGoal compositeGoal = new CompositeGoal();
-					compositeGoal.addAllGoals(goals);
-					Plan plan = planner.findSolution(compositeGoal);
+					//CompositeGoal compositeGoal = new CompositeGoal();
+					//compositeGoal.addAllGoals(goals);
+					Plan plan = planner.findSolution(goals.get(0));
 
 					result.put("plan", plan.getPlan());
 
@@ -161,7 +161,7 @@ public class Shrdlite {
 		}
 		return data.toString();
 	}
-	
+
 	public static String readFromFile(String path) throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(path));
 		StringBuilder data = new StringBuilder();

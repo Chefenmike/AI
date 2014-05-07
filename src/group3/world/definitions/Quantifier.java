@@ -1,4 +1,4 @@
-package group3.definitions;
+package group3.world.definitions;
 
 public enum Quantifier {
 	ANY("any"), THE("the"), A("a"), ALL("all");

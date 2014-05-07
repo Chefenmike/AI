@@ -1,4 +1,7 @@
-package group3.definitions;
+package group3.world;
+
+import group3.world.definitions.Shape;
+import group3.world.definitions.Size;
 
 public class Rules {
 

@@ -1,4 +1,4 @@
-package group3.definitions;
+package group3.world.definitions;
 
 public enum Size {
 	SMALL("small"), LARGE("large"), UNSPECIFIED("(-)");

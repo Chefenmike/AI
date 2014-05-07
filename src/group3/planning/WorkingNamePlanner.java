@@ -1,6 +1,6 @@
 package group3.planning;
 
-import group3.definitions.World;
+import group3.world.World;
 
 public class WorkingNamePlanner extends Planner {
 	
