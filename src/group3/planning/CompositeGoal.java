@@ -61,7 +61,7 @@ public class CompositeGoal {
 			}
 		}
 		
-		return "\""+ outputString +"\"";
+		return "{"+ outputString +"}";
 	}
 	
 	public void setAndGoal(boolean andGoal) {

@@ -40,7 +40,8 @@ public class Goal extends CompositeGoal{
 	 */
 	@Override
 	public String toString() {
-		return "\""+ outputString +"\"";
+		//return "\""+ outputString +"\"";
+		return outputString;
 	}
 
 	/**
