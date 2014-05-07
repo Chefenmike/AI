@@ -34,6 +34,7 @@ import group3.planning.Goal;
 import group3.planning.Plan;
 import group3.planning.Planner;
 import group3.utils.AbsolutePaths;
+import group3.utils.PlanningException;
 import group3.world.World;
 
 import org.json.simple.parser.ParseException;
@@ -117,34 +118,38 @@ public class Shrdlite {
 				result.put("output", "Parse error!");
 
 			} else {
-				List<CompositeGoal> goals = new ArrayList();
-				Interpreter interpreter = new Interpreter(currentWorld);
-				for (Term tree : trees) {
-					goals.addAll(interpreter.interpret(tree));
-				}
-				result.put("goals", goals.get(0));
-
-				if (goals.isEmpty()) {
-					result.put("output", "Interpretation error!");
-
-				} else if (goals.size() > 1) {
-					result.put("output", "Ambiguity error!");
-
-				} else {
-					Planner planner = new BreadthFirstPlanner(currentWorld);
-					//CompositeGoal compositeGoal = new CompositeGoal();
-					//compositeGoal.addAllGoals(goals);
-					Plan plan = planner.findSolution(goals.get(0));
-
-					result.put("plan", plan.getPlan());
-
-					if (plan.getPlan().isEmpty()) {
-						result.put("output", "Planning error!");
-					} else {
-						result.put("output", "Success!");
-						System.out.println(plan.getWorld().getWorldAsString());
-						currentWorld = plan.getWorld();
+				try {
+					List<CompositeGoal> goals = new ArrayList();
+					Interpreter interpreter = new Interpreter(currentWorld);
+					for (Term tree : trees) {
+						goals.addAll(interpreter.interpret(tree));
 					}
+					result.put("goals", goals);
+
+					if (goals.isEmpty()) {
+						result.put("output", "Interpretation error!");
+
+					} else if (goals.size() > 1) {
+						result.put("output", "Ambiguity error!");
+
+					} else {
+						Planner planner = new BreadthFirstPlanner(currentWorld);
+						//CompositeGoal compositeGoal = new CompositeGoal();
+						//compositeGoal.addAllGoals(goals);
+						Plan plan = planner.findSolution(goals.get(0));
+
+						result.put("plan", plan.getPlan());
+
+						if (plan.getPlan().isEmpty()) {
+							result.put("output", "Planning error!");
+						} else {
+							result.put("output", "Success!");
+							System.out.println(plan.getWorld().getWorldAsString());
+							currentWorld = plan.getWorld();
+						}
+					}
+				} catch (PlanningException e) {
+					result.put("output", e.getMessage());
 				}
 			}
 

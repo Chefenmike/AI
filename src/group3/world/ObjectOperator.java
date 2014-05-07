@@ -12,4 +12,9 @@ public class ObjectOperator implements ObjectInterface{
 	public OperatorEnum getOperator() {
 		return operator;
 	}
+	
+	@Override
+	public String toString() {
+		return operator.toString();
+	}
 }

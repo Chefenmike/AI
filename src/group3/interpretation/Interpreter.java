@@ -1,19 +1,24 @@
 package group3.interpretation;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import gnu.prolog.io.ParseException;
 import gnu.prolog.term.AtomicTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.term.CompoundTerm;
 import group3.planning.CompositeGoal;
 import group3.planning.Goal;
+import group3.utils.PlanningException;
 import group3.world.ObjectInWorld;
 import group3.world.ObjectInterface;
+import group3.world.ObjectOperator;
 import group3.world.RelativePosition;
 import group3.world.Rules;
 import group3.world.World;
 import group3.world.definitions.Colour;
+import group3.world.definitions.OperatorEnum;
 import group3.world.definitions.Shape;
 import group3.world.definitions.Size;
 
@@ -39,8 +44,9 @@ public class Interpreter {
 	 * @param tree
 	 *            The tree to be interpreted as goals.
 	 * @return a list of all possible interpretations of the tree.
+	 * @throws PlanningException 
 	 */
-	public List<CompositeGoal> interpret(Term tree) {
+	public List<CompositeGoal> interpret(Term tree) throws PlanningException {
 		CompoundTerm term = (CompoundTerm) tree;
 		List<CompositeGoal> goals = new ArrayList<CompositeGoal>();
 		ArrayList<ObjectInterface> possibleObjects = new ArrayList<ObjectInterface>();
@@ -59,7 +65,16 @@ public class Interpreter {
 					g.setString(obj.getId());
 					compositeGoal.addGoal(g);
 				} else {
-					//TODO: and, or
+					ObjectOperator operator = (ObjectOperator) o;
+					if (operator.getOperator().equals(OperatorEnum.AND)) {
+						throw new PlanningException("Cannot pick up more than one object!!");
+					} else if (operator.getOperator().equals(OperatorEnum.OR)) {
+						//Do nothing, add next object to the same composite goal
+					} else if (operator.getOperator().equals(OperatorEnum.XOR)) {
+						//create a new composite goal that the next object will be added to
+						goals.add(compositeGoal);
+						compositeGoal = new CompositeGoal();
+					}
 				}
 
 			}
@@ -79,7 +94,17 @@ public class Interpreter {
 						g.setString(obj.getId() + " " + rp.toString());
 						compositeGoal.addGoal(g);
 					} else {
-						//TODO
+						ObjectOperator operator = (ObjectOperator) o;
+						if (operator.getOperator().equals(OperatorEnum.AND)) {
+							compositeGoal.setAndGoal(true);
+						} else if (operator.getOperator().equals(OperatorEnum.OR)) {
+							compositeGoal.setAndGoal(false);
+							//Do nothing, add next object to the same composite goal
+						} else if (operator.getOperator().equals(OperatorEnum.XOR)) {
+							//create a new composite goal that the next object will be added to
+							goals.add(compositeGoal);
+							compositeGoal = new CompositeGoal();
+						}
 					}
 				}
 				goals.add(compositeGoal);
@@ -92,6 +117,7 @@ public class Interpreter {
 				for (ObjectInterface o : possibleObjects) {
 					if (o instanceof ObjectInWorld) {
 						ObjectInWorld obj = (ObjectInWorld) o;
+						CompositeGoal innerCompositeGoal = new CompositeGoal();
 						for (ObjectInterface r : relativeObjects) {
 							if (r instanceof ObjectInWorld) {
 								ObjectInWorld robj = (ObjectInWorld) r;
@@ -99,16 +125,32 @@ public class Interpreter {
 									Goal g = new Goal(obj, rp, robj);
 									g.setString(obj.getId() + " " + rp.toString() + " "
 											+ robj.getId());
-									compositeGoal.addGoal(g);
-
+									innerCompositeGoal.addGoal(g);
 								}
 							} else {
-								//TODO
+								ObjectOperator operator = (ObjectOperator) r;
+								if (operator.getOperator().equals(OperatorEnum.AND)) {
+									innerCompositeGoal.setAndGoal(true);
+								} else if (operator.getOperator().equals(OperatorEnum.OR)) {
+									innerCompositeGoal.setAndGoal(false);
+								} else if (operator.getOperator().equals(OperatorEnum.XOR)) {
+									throw new PlanningException("Ambiguity error!!");
+								}
 							}
-							
 						}
+						compositeGoal.addGoal(innerCompositeGoal);
 					} else {
-						//TODO
+						ObjectOperator operator = (ObjectOperator) o;
+						if (operator.getOperator().equals(OperatorEnum.AND)) {
+							compositeGoal.setAndGoal(true);
+						} else if (operator.getOperator().equals(OperatorEnum.OR)) {
+							compositeGoal.setAndGoal(false);
+							//Do nothing, add next object to the same composite goal
+						} else if (operator.getOperator().equals(OperatorEnum.XOR)) {
+							//create a new composite goal that the next object will be added to
+							goals.add(compositeGoal);
+							compositeGoal = new CompositeGoal();
+						}
 					}
 				}
 				goals.add(compositeGoal);
@@ -171,26 +213,54 @@ public class Interpreter {
 		} else if (compound.tag.toString().contains("basic_entity")) {
 			switch (getAtomString(compound.args[0])) {		
 			case "the":
-				returnList.add(getObjects(compound.args[1]).get(0));
-				return returnList;
+				ArrayList<ObjectInterface> xorObjects = getObjects(compound.args[1]);
+				xorObjects = addOperators(xorObjects, OperatorEnum.XOR);
+				return xorObjects;
 			case "any":
-				returnList.addAll(getObjects(compound.args[1]));
-				return returnList; 
+				ArrayList<ObjectInterface> orObjects = getObjects(compound.args[1]);
+				orObjects = addOperators(orObjects, OperatorEnum.OR);
+				return orObjects; 
 			case "all":
-				return getObjects(compound.args[1]);
+				ArrayList<ObjectInterface> allObjects = getObjects(compound.args[1]);
+				allObjects = addOperators(allObjects, OperatorEnum.AND);
+				return allObjects;
 			}
 		} else if (compound.tag.toString().contains("relative_entity")) {
 			ArrayList<ObjectInterface> matchingObjects = new ArrayList<ObjectInterface>();
 			switch (getAtomString(compound.args[0])) {
 			case "the":
-				matchingObjects.add(getObjects(compound.args[1]).get(0));
+				matchingObjects.addAll(getObjects(compound.args[1]));
+				matchingObjects = addOperators(matchingObjects, OperatorEnum.XOR);
 				return getRelative(matchingObjects, compound.args[2]);
 			case "any":
 				matchingObjects.addAll(getObjects(compound.args[1]));
+				matchingObjects = addOperators(matchingObjects, OperatorEnum.OR);
 				return getRelative(matchingObjects, compound.args[2]);
 			case "all":
 				matchingObjects = getObjects(compound.args[1]);
+				matchingObjects = addOperators(matchingObjects, OperatorEnum.AND);
 				return getRelative(matchingObjects, compound.args[2]);
+			}
+		}
+		return returnList;
+	}
+
+	/**
+	 * Adds either AND or OR between all elements in the supplied ArrayList
+	 * @param objectList the list to add operators to
+	 * @param operator the operator to be added
+	 * @return
+	 */
+	private ArrayList<ObjectInterface> addOperators(
+			ArrayList<ObjectInterface> objectList, OperatorEnum operator) {
+		ArrayList<ObjectInterface> returnList = new ArrayList<ObjectInterface>();
+		Iterator<ObjectInterface> iterator = objectList.iterator();
+		while (iterator.hasNext()) {
+			ObjectInterface object = iterator.next();
+			returnList.add(object);
+			if(iterator.hasNext()) {
+				ObjectOperator op = new ObjectOperator(operator);
+				returnList.add(op);
 			}
 		}
 		return returnList;
