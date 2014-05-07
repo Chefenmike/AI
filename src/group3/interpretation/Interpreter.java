@@ -9,6 +9,7 @@ import gnu.prolog.term.CompoundTerm;
 import group3.planning.CompositeGoal;
 import group3.planning.Goal;
 import group3.world.ObjectInWorld;
+import group3.world.ObjectInterface;
 import group3.world.RelativePosition;
 import group3.world.Rules;
 import group3.world.World;
@@ -42,7 +43,7 @@ public class Interpreter {
 	public List<CompositeGoal> interpret(Term tree) {
 		CompoundTerm term = (CompoundTerm) tree;
 		List<CompositeGoal> goals = new ArrayList<CompositeGoal>();
-		ArrayList<ObjectInWorld> possibleObjects = new ArrayList<ObjectInWorld>();
+		ArrayList<ObjectInterface> possibleObjects = new ArrayList<ObjectInterface>();
 
 		String command = term.tag.toString();
 		if (command.contains("take")) {
@@ -51,10 +52,16 @@ public class Interpreter {
 			// create a goal for every possible object that will fulfill the
 			// goal
 			CompositeGoal compositeGoal = new CompositeGoal();
-			for (ObjectInWorld o : possibleObjects) {
-				Goal g = new Goal(o, RelativePosition.HOLDING);
-				g.setString(o.getId());
-				compositeGoal.addGoal(g);
+			for (ObjectInterface o : possibleObjects) {
+				if (o instanceof ObjectInWorld) {
+					ObjectInWorld obj = (ObjectInWorld) o;
+					Goal g = new Goal(obj, RelativePosition.HOLDING);
+					g.setString(obj.getId());
+					compositeGoal.addGoal(g);
+				} else {
+					//TODO: and, or
+				}
+
 			}
 			goals.add(compositeGoal);
 		} else if (command.contains("move")) {
@@ -65,33 +72,49 @@ public class Interpreter {
 				// Target = floor
 				RelativePosition rp = RelativePosition.ONFLOOR;
 				CompositeGoal compositeGoal = new CompositeGoal();
-				for (ObjectInWorld o : possibleObjects) {
-					Goal g = new Goal(o, rp);
-					g.setString(o.getId() + " " + rp.toString());
-					compositeGoal.addGoal(g);
+				for (ObjectInterface o : possibleObjects) {
+					if (o instanceof ObjectInWorld) {
+						ObjectInWorld obj = (ObjectInWorld) o;
+						Goal g = new Goal(obj, rp);
+						g.setString(obj.getId() + " " + rp.toString());
+						compositeGoal.addGoal(g);
+					} else {
+						//TODO
+					}
 				}
 				goals.add(compositeGoal);
 			} else {
 				RelativePosition rp = RelativePosition
 						.getrelativepositionValueFromString(getAtomString(relative.args[0]));
-				ArrayList<ObjectInWorld> relativeObjects = getObjects(relative.args[1]);
+				ArrayList<ObjectInterface> relativeObjects = getObjects(relative.args[1]);
 
 				CompositeGoal compositeGoal = new CompositeGoal();
-				for (ObjectInWorld o : possibleObjects) {
-					for (ObjectInWorld r : relativeObjects) {
-						if(Rules.allowedMove(o, rp, r)){
-							Goal g = new Goal(o, rp, r);
-							g.setString(o.getId() + " " + rp.toString() + " "
-									+ r.getId());
-							compositeGoal.addGoal(g);
-						
+				for (ObjectInterface o : possibleObjects) {
+					if (o instanceof ObjectInWorld) {
+						ObjectInWorld obj = (ObjectInWorld) o;
+						for (ObjectInterface r : relativeObjects) {
+							if (r instanceof ObjectInWorld) {
+								ObjectInWorld robj = (ObjectInWorld) r;
+								if(Rules.allowedMove(obj, rp, robj)){
+									Goal g = new Goal(obj, rp, robj);
+									g.setString(obj.getId() + " " + rp.toString() + " "
+											+ robj.getId());
+									compositeGoal.addGoal(g);
+
+								}
+							} else {
+								//TODO
+							}
+							
 						}
+					} else {
+						//TODO
 					}
 				}
 				goals.add(compositeGoal);
 			}
 		}
-		
+
 		//Check if goal is possible according to rules of the world:
 		/*List<Goal> toBeRemoved = new ArrayList<Goal>();
 		for (Goal g : goals) {
@@ -111,8 +134,8 @@ public class Interpreter {
 	 * @param term
 	 * @return
 	 */
-	public ArrayList<ObjectInWorld> getObjects(Term term) {
-		ArrayList<ObjectInWorld> returnList = new ArrayList<ObjectInWorld>();
+	public ArrayList<ObjectInterface> getObjects(Term term) {
+		ArrayList<ObjectInterface> returnList = new ArrayList<ObjectInterface>();
 
 		CompoundTerm compound = (CompoundTerm) term;
 
@@ -124,27 +147,27 @@ public class Interpreter {
 			Colour color = Colour
 					.getColourValueFromString(getAtomString(compound.args[2]));
 
-				for (ObjectInWorld obj : world.getAllObjects()) {
-					boolean suitable = true; // object fits description
+			for (ObjectInWorld obj : world.getAllObjects()) {
+				boolean suitable = true; // object fits description
 
-					if (!shape.equals(Shape.UNSPECIFIED)
-							&& !obj.getShape().equals(shape)) {
-						// wrong shape
-						suitable = false;
-					} else if (!size.equals(Size.UNSPECIFIED)
-							&& !obj.getSize().equals(size)) {
-						// wrong size
-						suitable = false;
-					} else if (!color.equals(Colour.UNSPECIFIED)
-							&& !obj.getColour().equals(color)) {
-						// wrong color
-						suitable = false;
-					}
-
-					if (suitable) {
-						returnList.add(obj);
-					}
+				if (!shape.equals(Shape.UNSPECIFIED)
+						&& !obj.getShape().equals(shape)) {
+					// wrong shape
+					suitable = false;
+				} else if (!size.equals(Size.UNSPECIFIED)
+						&& !obj.getSize().equals(size)) {
+					// wrong size
+					suitable = false;
+				} else if (!color.equals(Colour.UNSPECIFIED)
+						&& !obj.getColour().equals(color)) {
+					// wrong color
+					suitable = false;
 				}
+
+				if (suitable) {
+					returnList.add(obj);
+				}
+			}
 		} else if (compound.tag.toString().contains("basic_entity")) {
 			switch (getAtomString(compound.args[0])) {		
 			case "the":
@@ -157,7 +180,7 @@ public class Interpreter {
 				return getObjects(compound.args[1]);
 			}
 		} else if (compound.tag.toString().contains("relative_entity")) {
-			ArrayList<ObjectInWorld> matchingObjects = new ArrayList<ObjectInWorld>();
+			ArrayList<ObjectInterface> matchingObjects = new ArrayList<ObjectInterface>();
 			switch (getAtomString(compound.args[0])) {
 			case "the":
 				matchingObjects.add(getObjects(compound.args[1]).get(0));
@@ -179,13 +202,13 @@ public class Interpreter {
 	 * @param relation
 	 * @return
 	 */
-	private ArrayList<ObjectInWorld> getRelative(ArrayList<ObjectInWorld> matchingObjects, Term relation) {
-		ArrayList<ObjectInWorld> returnList = new ArrayList<ObjectInWorld>();
+	private ArrayList<ObjectInterface> getRelative(ArrayList<ObjectInterface> matchingObjects, Term relation) {
+		ArrayList<ObjectInterface> returnList = new ArrayList<ObjectInterface>();
 		CompoundTerm compound = (CompoundTerm) relation;
 		RelativePosition rp = RelativePosition
 				.getrelativepositionValueFromString(getAtomString(compound.args[0]));
-		
-		ArrayList<ObjectInWorld> relativeObjects = new ArrayList<ObjectInWorld>();
+
+		ArrayList<ObjectInterface> relativeObjects = new ArrayList<ObjectInterface>();
 		if(compound.args[1].getTermType()==Term.COMPOUND) {
 			relativeObjects = getObjects(compound.args[1]);
 		} else {
@@ -194,11 +217,17 @@ public class Interpreter {
 			}
 		}
 
-		for (ObjectInWorld o : matchingObjects) {
-			boolean stillMatching = world.checkRelation(o, rp, relativeObjects);
-			if (stillMatching) {
-				returnList.add(o);
+		for (ObjectInterface o : matchingObjects) {
+			if (o instanceof ObjectInWorld) {
+				ObjectInWorld obj = (ObjectInWorld) o;
+				boolean stillMatching = world.checkRelation(obj, rp, relativeObjects);
+				if (stillMatching) {
+					returnList.add(o);
+				}
+			} else {
+				//TODO
 			}
+			
 		}
 
 		return returnList;

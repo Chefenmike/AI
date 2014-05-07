@@ -133,14 +133,20 @@ public class World {
 	 * @param otherObjects 
 	 * @return true if the relation exist between object1 and any object in the list
 	 */
-	public boolean checkRelation(ObjectInWorld object1, RelativePosition rp, ArrayList<ObjectInWorld> otherObjects) {
+	public boolean checkRelation(ObjectInWorld object1, RelativePosition rp, ArrayList<ObjectInterface> otherObjects) {
 		if (otherObjects.isEmpty()) {
 			return checkRelation(object1, rp);
 		} else {
-			for (ObjectInWorld object2 : otherObjects) {
-				if (checkRelation(object1, rp, object2)) {
-					return true;
+			for (ObjectInterface object2 : otherObjects) {
+				if (object2 instanceof ObjectInWorld) {
+					ObjectInWorld obj = (ObjectInWorld) object2;
+					if (checkRelation(object1, rp, obj)) {
+						return true;
+					}
+				} else {
+					//TODO and or
 				}
+				
 			}
 			return false;
 		}
