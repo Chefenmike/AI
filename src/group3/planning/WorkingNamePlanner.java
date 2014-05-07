@@ -63,4 +63,5 @@ public class WorkingNamePlanner extends Planner {
 	private World next(World originalWorld, World testWorld) {
 		return null;
 	}
+	
 }
