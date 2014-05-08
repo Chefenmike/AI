@@ -21,6 +21,7 @@ import group3.utils.AbsolutePaths;
 
 public class DCGParser {
     private static final String prologParserFile = AbsolutePaths.PROLOGPARSERFILE;
+	//private static final String prologParserFile = "dcg_parser.pl";
 
 	private static Environment env;
 	private static Interpreter interpreter;

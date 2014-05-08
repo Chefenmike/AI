@@ -271,10 +271,19 @@ public class World {
 		return false;
 	}
 
-	public boolean isLeftOf(ObjectInWorld b, ObjectInWorld a){
+	public boolean isLeftOf(ObjectInWorld a, ObjectInWorld b){
 		for(int i = 0; i < worldRepresentationList.size(); i++){
-			ArrayList<ObjectInWorld> objList = worldRepresentationList.get(i);
-			for(ObjectInWorld obj : objList){
+			ArrayList<ObjectInWorld> columnList = worldRepresentationList.get(i);
+			if (columnList.contains(a)) {
+				for(int j = i+1; j < worldRepresentationList.size(); j++){
+					if(worldRepresentationList.get(j).contains(b)) return true;
+				}
+			}
+		}
+		return false;
+	}
+			
+	/*		for(ObjectInWorld obj : objList){
 				if(obj.equals(a)){
 					for(int j = i-1; j > -1; j--){
 						if(worldRepresentationList.get(j).contains(b)) return true;
@@ -283,10 +292,10 @@ public class World {
 			}
 		}
 		return false;
-	}
+	}*/
 
-	public boolean isRightOf(ObjectInWorld b, ObjectInWorld a){
-		for(int i = 0; i < worldRepresentationList.size(); i++){
+	public boolean isRightOf(ObjectInWorld a, ObjectInWorld b){
+		/*for(int i = 0; i < worldRepresentationList.size(); i++){
 			ArrayList<ObjectInWorld> objList = worldRepresentationList.get(i);
 			for(ObjectInWorld obj : objList){
 				if(obj.equals(a)){
@@ -296,7 +305,8 @@ public class World {
 				}
 			}
 		}
-		return false;
+		return false;*/
+		return isLeftOf(b,a);
 	}
 
 	/**

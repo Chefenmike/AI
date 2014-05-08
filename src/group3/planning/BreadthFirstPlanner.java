@@ -43,8 +43,9 @@ public class BreadthFirstPlanner extends Planner {
 		worldList.put(world, new ArrayList<String>());
 		ObjectInWorld tempObjectInWorld;
 		World workingCopyOfWorld, tempWorld;
-		startNewThread();
-		while (!Thread.interrupted()) {
+		//startNewThread();
+		//while (!Thread.interrupted()) {
+		while (true) {
 			Map<World, List<String>> newWorldList = new HashMap<World, List<String>>();
 			for (Map.Entry<World, List<String>> entry : worldList.entrySet()) {
 				workingCopyOfWorld = new World(entry.getKey());
@@ -91,7 +92,7 @@ public class BreadthFirstPlanner extends Planner {
 			}
 			worldList = newWorldList;
 		}
-		throw new TimeLimitExceededException("This took too long");
+		//throw new TimeLimitExceededException("This took too long");
 	}
 
 	private void startNewThread() {

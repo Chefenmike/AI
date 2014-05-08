@@ -62,7 +62,11 @@ public class Goal extends CompositeGoal{
 			return world.isUnder(objectToMove, otherObject);
 		} else if (relativePosition.equals(RelativePosition.BESIDE)) {
 			return world.isBeside(objectToMove, otherObject);
-		} else {
+		} else if (relativePosition.equals(RelativePosition.LEFTOF)) {
+			return world.isLeftOf(objectToMove, otherObject);
+		}else if (relativePosition.equals(RelativePosition.RIGHTOF)) {
+			return world.isRightOf(objectToMove, otherObject);
+		}else {
 			return false;
 		}
 	}

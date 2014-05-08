@@ -76,6 +76,10 @@ public class Rules {
 			return !objectToMove.getShape().equals(Shape.BALL) && !(destinationObject.getSize().equals(Size.LARGE) && objectToMove.getSize().equals(Size.SMALL));
 		} else if (relativePosition.equals(RelativePosition.BESIDE)) {
 			return true;
+		} else if (relativePosition.equals(RelativePosition.LEFTOF)) {
+			return true;
+		} else if (relativePosition.equals(RelativePosition.RIGHTOF)) {
+			return true;
 		} else if (relativePosition.equals(RelativePosition.UNSPECIFIED) && destinationObject==null) {
 			//Corresponds to either a pick up or put on floor action,
 			//since these are the only actions with only one object involved

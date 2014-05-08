@@ -45,7 +45,7 @@ import org.json.simple.JSONArray;
 public class Shrdlite {
 	private static World currentWorld;
 
-	private static boolean consoleTest = false;
+	private static boolean consoleTest = true;
 	private static String worldPath = "examples\\small.json";
 	//private static String worldPath = "examples\\medium.json";
 	
@@ -63,7 +63,6 @@ public class Shrdlite {
 		JSONObject objects;
 		
 		if (consoleTest) {
-			String command = "[]";
 			jsinput = (JSONObject) JSONValue.parse(readFromFile(worldPath));
 
 			world = (JSONArray) jsinput.get("world");
