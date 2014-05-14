@@ -210,17 +210,17 @@ public class Interpreter {
 				if (suitable) {
 					returnList.add(obj);
 				}
-				
-				if (returnList.isEmpty()) {
-					String exString = "No such object in world (";
-					if (!size.equals(Size.UNSPECIFIED)) {
-						exString += size.toString() + " ";
-					} if (!color.equals(Colour.UNSPECIFIED)) {
-						exString += color.toString() + " ";
-					}
-					exString += shape.toString() + ")";
-					throw new PlanningException(exString);
+			}
+			
+			if (returnList.isEmpty()) {
+				String exString = "No such object in world (";
+				if (!size.equals(Size.UNSPECIFIED)) {
+					exString += size.toString() + " ";
+				} if (!color.equals(Colour.UNSPECIFIED)) {
+					exString += color.toString() + " ";
 				}
+				exString += shape.toString() + ")";
+				throw new PlanningException(exString);
 			}
 		} else if (compound.tag.toString().contains("basic_entity")) {
 			switch (getAtomString(compound.args[0])) {		
@@ -256,7 +256,7 @@ public class Interpreter {
 		}
 		
 		if (returnList.isEmpty()) {
-			throw new PlanningException("No such object in world!");
+			throw new PlanningException("No such object in world!!!");
 		}
 		
 		return returnList;
@@ -319,7 +319,7 @@ public class Interpreter {
 		}
 		
 		if (returnList.isEmpty()) {
-			throw new PlanningException("No such object in world!");
+			throw new PlanningException("No such object in world!!");
 		}
 
 		return returnList;

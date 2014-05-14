@@ -46,8 +46,8 @@ public class Shrdlite {
 	private static World currentWorld;
 
 	private static boolean consoleTest = true;
-	private static String worldPath = "examples\\small.json";
-	//private static String worldPath = "examples\\medium.json";
+	//private static String worldPath = "examples\\small.json";
+	private static String worldPath = "examples\\medium.json";
 	
 	private static JSONObject result = new JSONObject();
 	private static List<Term> trees;
