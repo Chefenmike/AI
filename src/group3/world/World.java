@@ -1,8 +1,5 @@
 package group3.world;
 
-import gnu.prolog.term.AtomicTerm;
-import gnu.prolog.term.CompoundTerm;
-import gnu.prolog.term.Term;
 import group3.world.definitions.Colour;
 import group3.world.definitions.Shape;
 import group3.world.definitions.Size;
@@ -11,7 +8,6 @@ import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 public class World {
 

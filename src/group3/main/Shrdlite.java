@@ -30,7 +30,6 @@ import group3.interpretation.Interpreter;
 import group3.parsing.DCGParser;
 import group3.planning.BreadthFirstPlanner;
 import group3.planning.CompositeGoal;
-import group3.planning.Goal;
 import group3.planning.Plan;
 import group3.planning.Planner;
 import group3.utils.AbsolutePaths;
@@ -45,7 +44,7 @@ import org.json.simple.JSONArray;
 public class Shrdlite {
 	private static World currentWorld;
 
-	private static boolean consoleTest = false;
+	private static boolean consoleTest = true;
 	//private static String worldPath = "examples\\small.json";
 	private static String worldPath = "examples\\medium.json";
 	
@@ -87,6 +86,8 @@ public class Shrdlite {
 			trees = parser.parseSentence("command", utterance);
 			
 			parseAndplan();
+
+			System.out.print(result);
 		}
 
 		while (consoleTest) {
@@ -150,9 +151,8 @@ public class Shrdlite {
 				} else {
 					Planner planner = new BreadthFirstPlanner(currentWorld);
 					Plan plan = planner.findSolution(goals.get(0));
-
 					result.put("plan", plan.getPlan());
-
+					
 					if (plan.getPlan().isEmpty()) {
 						result.put("output", "Goal is alreay fulfilled!");
 					} else {

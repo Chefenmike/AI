@@ -492,7 +492,7 @@ function debugWorld() {
 function debugResult(result) {
     $("#debugoutput").text(result.output);
     $("#debugtrees").html(result.trees ? result.trees.join("<br>") : "&mdash;");
-    $("#debuggoals").html(result.goals ? result.goals.join("<br>") : "&mdash;");
+    $("#debuggoals").html(result.goals);
     $("#debugplan").html(result.plan ? result.plan.join("<br>") : "&mdash;");
     $("#debugstate").html(result.state ? JSON.stringify(result.state) : "&mdash;");
     $("#debugjson").text(JSON.stringify(result, null, " "));

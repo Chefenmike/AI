@@ -34,13 +34,8 @@ public class Goal extends CompositeGoal{
 		this.outputString = s;
 	}
 	
-	/**
-	 * Goals must have a string, surrounded with "fnutts".
-	 * This method is called by the method put in JSONObject.
-	 */
 	@Override
 	public String toString() {
-		//return "\""+ outputString +"\"";
 		return outputString;
 	}
 
