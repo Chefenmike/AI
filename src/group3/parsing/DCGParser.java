@@ -20,13 +20,10 @@ import gnu.prolog.vm.TermConstants;
 import group3.utils.AbsolutePaths;
 
 public class DCGParser {
-    private static final String prologParserFile = AbsolutePaths.PROLOGPARSERFILE;
-	//private static final String prologParserFile = "dcg_parser.pl";
-
 	private static Environment env;
 	private static Interpreter interpreter;
 
-	public DCGParser(String prologGrammarFile) throws PrologException {
+	public DCGParser(String prologGrammarFile, String prologParserFile) throws PrologException {
 		env = new Environment();
 		env.ensureLoaded(AtomTerm.get(prologParserFile));
 		env.ensureLoaded(AtomTerm.get(prologGrammarFile));

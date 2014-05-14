@@ -45,7 +45,7 @@ import org.json.simple.JSONArray;
 public class Shrdlite {
 	private static World currentWorld;
 
-	private static boolean consoleTest = true;
+	private static boolean consoleTest = false;
 	//private static String worldPath = "examples\\small.json";
 	private static String worldPath = "examples\\medium.json";
 	
@@ -83,7 +83,7 @@ public class Shrdlite {
 			result.put("utterance", utterance);
 
 
-			DCGParser parser = new DCGParser("shrdlite_grammar.pl");
+			DCGParser parser = new DCGParser("shrdlite_grammar.pl", "dcg_parser.pl");
 			trees = parser.parseSentence("command", utterance);
 			
 			parseAndplan();
@@ -111,7 +111,7 @@ public class Shrdlite {
 			result.put("utterance", lista);
 
 
-			DCGParser parser = new DCGParser(AbsolutePaths.DCGPARSERFILE);
+			DCGParser parser = new DCGParser(AbsolutePaths.DCGPARSERFILE, AbsolutePaths.PROLOGPARSERFILE);
 			trees = parser.parseSentence("command", lista);
 			
 			
