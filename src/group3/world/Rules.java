@@ -30,6 +30,12 @@ public class Rules {
 						return false;
 					} 
 				} if (objectToMove.getShape().equals(Shape.BOX)) {
+					if (destinationObject.getShape().equals(Shape.BOX)) {
+						System.out.println("kommer");
+						return false;
+					}
+					
+					//System.out.println("kommer33");
 					//Boxes can only be supported by tables or planks of the same size, 
 					//but large boxes can also be supported by large bricks.
 					if (!objectToMove.getSize().equals(destinationObject.getSize())) {
@@ -41,9 +47,9 @@ public class Rules {
 					} else if (destinationObject.getShape().equals(Shape.BRICK) && destinationObject.getSize().equals(Size.SMALL)) {
 						//Small bricks cannot support any boxes
 						return false;
-					}
+					} 
 				}
- 			
+				//System.out.println("komme2r");
 		return true; //all rules fulfilled
 	}	
 	

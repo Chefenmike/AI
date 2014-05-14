@@ -126,6 +126,8 @@ public class Interpreter {
 									g.setString(obj.getId() + " " + rp.toString() + " "
 											+ robj.getId());
 									innerCompositeGoal.addGoal(g);
+								} else {
+									throw new PlanningException("Unallowed goal");
 								}
 							} else {
 								ObjectOperator operator = (ObjectOperator) r;
