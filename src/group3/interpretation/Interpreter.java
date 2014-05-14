@@ -44,7 +44,7 @@ public class Interpreter {
 	 * @param tree
 	 *            The tree to be interpreted as goals.
 	 * @return a list of all possible interpretations of the tree.
-	 * @throws PlanningException 
+	 * @throws PlanningException
 	 */
 	public List<CompositeGoal> interpret(Term tree) throws PlanningException {
 		CompoundTerm term = (CompoundTerm) tree;
@@ -67,11 +67,14 @@ public class Interpreter {
 				} else {
 					ObjectOperator operator = (ObjectOperator) o;
 					if (operator.getOperator().equals(OperatorEnum.AND)) {
-						throw new PlanningException("Cannot pick up more than one object!!");
+						throw new PlanningException(
+								"Cannot pick up more than one object!!");
 					} else if (operator.getOperator().equals(OperatorEnum.OR)) {
-						//Do nothing, add next object to the same composite goal
+						// Do nothing, add next object to the same composite
+						// goal
 					} else if (operator.getOperator().equals(OperatorEnum.XOR)) {
-						//create a new composite goal that the next object will be added to
+						// create a new composite goal that the next object will
+						// be added to
 						goals.add(compositeGoal);
 						compositeGoal = new CompositeGoal();
 					}
@@ -97,11 +100,15 @@ public class Interpreter {
 						ObjectOperator operator = (ObjectOperator) o;
 						if (operator.getOperator().equals(OperatorEnum.AND)) {
 							compositeGoal.setAndGoal(true);
-						} else if (operator.getOperator().equals(OperatorEnum.OR)) {
+						} else if (operator.getOperator().equals(
+								OperatorEnum.OR)) {
 							compositeGoal.setAndGoal(false);
-							//Do nothing, add next object to the same composite goal
-						} else if (operator.getOperator().equals(OperatorEnum.XOR)) {
-							//create a new composite goal that the next object will be added to
+							// Do nothing, add next object to the same composite
+							// goal
+						} else if (operator.getOperator().equals(
+								OperatorEnum.XOR)) {
+							// create a new composite goal that the next object
+							// will be added to
 							goals.add(compositeGoal);
 							compositeGoal = new CompositeGoal();
 						}
@@ -121,22 +128,28 @@ public class Interpreter {
 						for (ObjectInterface r : relativeObjects) {
 							if (r instanceof ObjectInWorld) {
 								ObjectInWorld robj = (ObjectInWorld) r;
-								if(Rules.allowedMove(obj, rp, robj)){
+								if (Rules.allowedMove(obj, rp, robj)) {
 									Goal g = new Goal(obj, rp, robj);
-									g.setString(obj.getId() + " " + rp.toString() + " "
+									g.setString(obj.getId() + " "
+											+ rp.toString() + " "
 											+ robj.getId());
 									innerCompositeGoal.addGoal(g);
 								} else {
-									throw new PlanningException("Unallowed goal");
+									throw new PlanningException(
+											"Unallowed goal");
 								}
 							} else {
 								ObjectOperator operator = (ObjectOperator) r;
-								if (operator.getOperator().equals(OperatorEnum.AND)) {
+								if (operator.getOperator().equals(
+										OperatorEnum.AND)) {
 									innerCompositeGoal.setAndGoal(true);
-								} else if (operator.getOperator().equals(OperatorEnum.OR)) {
+								} else if (operator.getOperator().equals(
+										OperatorEnum.OR)) {
 									innerCompositeGoal.setAndGoal(false);
-								} else if (operator.getOperator().equals(OperatorEnum.XOR)) {
-									throw new PlanningException("Ambiguity error!!");
+								} else if (operator.getOperator().equals(
+										OperatorEnum.XOR)) {
+									throw new PlanningException(
+											"Ambiguity error!!");
 								}
 							}
 						}
@@ -145,11 +158,15 @@ public class Interpreter {
 						ObjectOperator operator = (ObjectOperator) o;
 						if (operator.getOperator().equals(OperatorEnum.AND)) {
 							compositeGoal.setAndGoal(true);
-						} else if (operator.getOperator().equals(OperatorEnum.OR)) {
+						} else if (operator.getOperator().equals(
+								OperatorEnum.OR)) {
 							compositeGoal.setAndGoal(false);
-							//Do nothing, add next object to the same composite goal
-						} else if (operator.getOperator().equals(OperatorEnum.XOR)) {
-							//create a new composite goal that the next object will be added to
+							// Do nothing, add next object to the same composite
+							// goal
+						} else if (operator.getOperator().equals(
+								OperatorEnum.XOR)) {
+							// create a new composite goal that the next object
+							// will be added to
 							goals.add(compositeGoal);
 							compositeGoal = new CompositeGoal();
 						}
@@ -159,14 +176,12 @@ public class Interpreter {
 			}
 		}
 
-		//Check if goal is possible according to rules of the world:
-		/*List<Goal> toBeRemoved = new ArrayList<Goal>();
-		for (Goal g : goals) {
-			if (!g.isAllowed()) {
-				toBeRemoved.add(g);
-			}
-		}
-		goals.removeAll(toBeRemoved);*/
+		// Check if goal is possible according to rules of the world:
+		/*
+		 * List<Goal> toBeRemoved = new ArrayList<Goal>(); for (Goal g : goals)
+		 * { if (!g.isAllowed()) { toBeRemoved.add(g); } }
+		 * goals.removeAll(toBeRemoved);
+		 */
 
 		return goals;
 	}
@@ -177,14 +192,15 @@ public class Interpreter {
 	 * 
 	 * @param term
 	 * @return
-	 * @throws PlanningException 
+	 * @throws PlanningException
 	 */
-	public ArrayList<ObjectInterface> getObjects(Term term) throws PlanningException {
+	public ArrayList<ObjectInterface> getObjects(Term term)
+			throws PlanningException {
 		ArrayList<ObjectInterface> returnList = new ArrayList<ObjectInterface>();
 
 		CompoundTerm compound;
 		if (term instanceof CompoundTerm) {
-			compound = (CompoundTerm) term;			
+			compound = (CompoundTerm) term;
 		} else {
 			throw new PlanningException("Parse error");
 		}
@@ -218,19 +234,20 @@ public class Interpreter {
 					returnList.add(obj);
 				}
 			}
-			
+
 			if (returnList.isEmpty()) {
 				String exString = "No such object in world (";
 				if (!size.equals(Size.UNSPECIFIED)) {
 					exString += size.toString() + " ";
-				} if (!color.equals(Colour.UNSPECIFIED)) {
+				}
+				if (!color.equals(Colour.UNSPECIFIED)) {
 					exString += color.toString() + " ";
 				}
 				exString += shape.toString() + ")";
 				throw new PlanningException(exString);
 			}
 		} else if (compound.tag.toString().contains("basic_entity")) {
-			switch (getAtomString(compound.args[0])) {		
+			switch (getAtomString(compound.args[0])) {
 			case "the":
 				ArrayList<ObjectInterface> xorObjects = getObjects(compound.args[1]);
 				xorObjects = addOperators(xorObjects, OperatorEnum.XOR);
@@ -238,7 +255,7 @@ public class Interpreter {
 			case "any":
 				ArrayList<ObjectInterface> orObjects = getObjects(compound.args[1]);
 				orObjects = addOperators(orObjects, OperatorEnum.OR);
-				return orObjects; 
+				return orObjects;
 			case "all":
 				ArrayList<ObjectInterface> allObjects = getObjects(compound.args[1]);
 				allObjects = addOperators(allObjects, OperatorEnum.AND);
@@ -249,7 +266,8 @@ public class Interpreter {
 			switch (getAtomString(compound.args[0])) {
 			case "the":
 				matchingObjects.addAll(getObjects(compound.args[1]));
-				matchingObjects = addOperators(matchingObjects, OperatorEnum.XOR);
+				matchingObjects = addOperators(matchingObjects,
+						OperatorEnum.XOR);
 				return getRelative(matchingObjects, compound.args[2]);
 			case "any":
 				matchingObjects.addAll(getObjects(compound.args[1]));
@@ -257,22 +275,26 @@ public class Interpreter {
 				return getRelative(matchingObjects, compound.args[2]);
 			case "all":
 				matchingObjects = getObjects(compound.args[1]);
-				matchingObjects = addOperators(matchingObjects, OperatorEnum.AND);
+				matchingObjects = addOperators(matchingObjects,
+						OperatorEnum.AND);
 				return getRelative(matchingObjects, compound.args[2]);
 			}
 		}
-		
+
 		if (returnList.isEmpty()) {
 			throw new PlanningException("No such object in world!!!");
 		}
-		
+
 		return returnList;
 	}
 
 	/**
 	 * Adds either AND or OR between all elements in the supplied ArrayList
-	 * @param objectList the list to add operators to
-	 * @param operator the operator to be added
+	 * 
+	 * @param objectList
+	 *            the list to add operators to
+	 * @param operator
+	 *            the operator to be added
 	 * @return
 	 */
 	private ArrayList<ObjectInterface> addOperators(
@@ -282,7 +304,7 @@ public class Interpreter {
 		while (iterator.hasNext()) {
 			ObjectInterface object = iterator.next();
 			returnList.add(object);
-			if(iterator.hasNext()) {
+			if (iterator.hasNext()) {
 				ObjectOperator op = new ObjectOperator(operator);
 				returnList.add(op);
 			}
@@ -295,19 +317,22 @@ public class Interpreter {
 	 * @param matchingObjects
 	 * @param relation
 	 * @return
-	 * @throws PlanningException 
+	 * @throws PlanningException
 	 */
-	private ArrayList<ObjectInterface> getRelative(ArrayList<ObjectInterface> matchingObjects, Term relation) throws PlanningException {
+	private ArrayList<ObjectInterface> getRelative(
+			ArrayList<ObjectInterface> matchingObjects, Term relation)
+			throws PlanningException {
 		ArrayList<ObjectInterface> returnList = new ArrayList<ObjectInterface>();
 		CompoundTerm compound = (CompoundTerm) relation;
 		RelativePosition rp = RelativePosition
 				.getrelativepositionValueFromString(getAtomString(compound.args[0]));
 
 		ArrayList<ObjectInterface> relativeObjects = new ArrayList<ObjectInterface>();
-		if(compound.args[1].getTermType()==Term.COMPOUND) {
+		if (compound.args[1].getTermType() == Term.COMPOUND) {
 			relativeObjects = getObjects(compound.args[1]);
 		} else {
-			if (rp==RelativePosition.ONTOP && getAtomString(compound.args[1]).equals("floor")) {
+			if (rp == RelativePosition.ONTOP
+					&& getAtomString(compound.args[1]).equals("floor")) {
 				rp = RelativePosition.ONFLOOR;
 			}
 		}
@@ -315,16 +340,17 @@ public class Interpreter {
 		for (ObjectInterface o : matchingObjects) {
 			if (o instanceof ObjectInWorld) {
 				ObjectInWorld obj = (ObjectInWorld) o;
-				boolean stillMatching = world.checkRelation(obj, rp, relativeObjects);
+				boolean stillMatching = world.checkRelation(obj, rp,
+						relativeObjects);
 				if (stillMatching) {
 					returnList.add(o);
 				}
 			} else {
-				//TODO
+				// TODO
 			}
-			
+
 		}
-		
+
 		if (returnList.isEmpty()) {
 			throw new PlanningException("No such object in world!!");
 		}
