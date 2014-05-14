@@ -154,7 +154,7 @@ public class Shrdlite {
 					result.put("plan", plan.getPlan());
 
 					if (plan.getPlan().isEmpty()) {
-						result.put("output", "Planning error!");
+						result.put("output", "Goal is alreay fulfilled!");
 					} else {
 						result.put("output", "Success!");
 						currentWorld = plan.getWorld();

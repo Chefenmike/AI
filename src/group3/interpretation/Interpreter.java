@@ -175,8 +175,9 @@ public class Interpreter {
 	 * 
 	 * @param term
 	 * @return
+	 * @throws PlanningException 
 	 */
-	public ArrayList<ObjectInterface> getObjects(Term term) {
+	public ArrayList<ObjectInterface> getObjects(Term term) throws PlanningException {
 		ArrayList<ObjectInterface> returnList = new ArrayList<ObjectInterface>();
 
 		CompoundTerm compound = (CompoundTerm) term;
@@ -208,6 +209,17 @@ public class Interpreter {
 
 				if (suitable) {
 					returnList.add(obj);
+				}
+				
+				if (returnList.isEmpty()) {
+					String exString = "No such object in world (";
+					if (!size.equals(Size.UNSPECIFIED)) {
+						exString += size.toString() + " ";
+					} if (!color.equals(Colour.UNSPECIFIED)) {
+						exString += color.toString() + " ";
+					}
+					exString += shape.toString() + ")";
+					throw new PlanningException(exString);
 				}
 			}
 		} else if (compound.tag.toString().contains("basic_entity")) {
@@ -242,6 +254,11 @@ public class Interpreter {
 				return getRelative(matchingObjects, compound.args[2]);
 			}
 		}
+		
+		if (returnList.isEmpty()) {
+			throw new PlanningException("No such object in world!");
+		}
+		
 		return returnList;
 	}
 
@@ -271,8 +288,9 @@ public class Interpreter {
 	 * @param matchingObjects
 	 * @param relation
 	 * @return
+	 * @throws PlanningException 
 	 */
-	private ArrayList<ObjectInterface> getRelative(ArrayList<ObjectInterface> matchingObjects, Term relation) {
+	private ArrayList<ObjectInterface> getRelative(ArrayList<ObjectInterface> matchingObjects, Term relation) throws PlanningException {
 		ArrayList<ObjectInterface> returnList = new ArrayList<ObjectInterface>();
 		CompoundTerm compound = (CompoundTerm) relation;
 		RelativePosition rp = RelativePosition
@@ -298,6 +316,10 @@ public class Interpreter {
 				//TODO
 			}
 			
+		}
+		
+		if (returnList.isEmpty()) {
+			throw new PlanningException("No such object in world!");
 		}
 
 		return returnList;
