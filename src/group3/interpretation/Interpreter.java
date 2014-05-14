@@ -180,7 +180,12 @@ public class Interpreter {
 	public ArrayList<ObjectInterface> getObjects(Term term) throws PlanningException {
 		ArrayList<ObjectInterface> returnList = new ArrayList<ObjectInterface>();
 
-		CompoundTerm compound = (CompoundTerm) term;
+		CompoundTerm compound;
+		if (term instanceof CompoundTerm) {
+			compound = (CompoundTerm) term;			
+		} else {
+			throw new PlanningException("Parse error");
+		}
 
 		if (compound.tag.toString().contains("object")) {
 			Shape shape = Shape
