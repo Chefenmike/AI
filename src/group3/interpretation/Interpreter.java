@@ -135,8 +135,14 @@ public class Interpreter {
 											+ robj.getId());
 									innerCompositeGoal.addGoal(g);
 								} else {
-									throw new PlanningException(
-											"Unallowed goal");
+									//For some reason, putting this in rules isnt enough.
+									//box cannot be put inside of another box
+									if (obj.getShape().equals(Shape.BOX)
+											&& robj.getShape()
+													.equals(Shape.BOX)
+											&& rp.equals(RelativePosition.INSIDE))
+										throw new PlanningException(
+												"Unallowed goal");
 								}
 							} else {
 								ObjectOperator operator = (ObjectOperator) r;
