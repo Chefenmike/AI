@@ -134,7 +134,8 @@ public class Interpreter {
 											+ rp.toString() + " "
 											+ robj.getId());
 									innerCompositeGoal.addGoal(g);
-								} else {
+								} 
+								/*else {
 									//For some reason, putting this in rules isnt enough.
 									//box cannot be put inside of another box
 									if (obj.getShape().equals(Shape.BOX)
@@ -143,7 +144,7 @@ public class Interpreter {
 											&& rp.equals(RelativePosition.INSIDE))
 										throw new PlanningException(
 												"Unallowed goal");
-								}
+								}*/
 							} else {
 								ObjectOperator operator = (ObjectOperator) r;
 								if (operator.getOperator().equals(
@@ -183,11 +184,13 @@ public class Interpreter {
 		}
 
 		// Check if goal is possible according to rules of the world:
-		/*
-		 * List<Goal> toBeRemoved = new ArrayList<Goal>(); for (Goal g : goals)
-		 * { if (!g.isAllowed()) { toBeRemoved.add(g); } }
-		 * goals.removeAll(toBeRemoved);
-		 */
+		List<CompositeGoal> toBeRemoved = new ArrayList<CompositeGoal>();
+		for (CompositeGoal g : goals) {
+			if (!g.isAllowed()) {
+				toBeRemoved.add(g);
+			}
+		}
+		goals.removeAll(toBeRemoved);
 
 		return goals;
 	}

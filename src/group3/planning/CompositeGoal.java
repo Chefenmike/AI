@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import group3.world.Rules;
 import group3.world.World;
 
 /**
@@ -66,5 +67,27 @@ public class CompositeGoal {
 	
 	public void setAndGoal(boolean andGoal) {
 		this.andGoal = andGoal;
+	}
+
+	/**
+	 * Returns true if this goal is possible to fulfill according to the rules of the world.
+	 * @return
+	 */
+	public boolean isAllowed() {
+		if (andGoal) {
+			for (CompositeGoal g : goals) {
+				if (!g.isAllowed()) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			for (CompositeGoal g : goals) {
+				if (g.isAllowed()) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 }
