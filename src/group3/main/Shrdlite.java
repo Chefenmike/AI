@@ -45,8 +45,8 @@ public class Shrdlite {
 	private static World currentWorld;
 
 	private static boolean consoleTest = true;
-	//private static String worldPath = "examples\\small.json";
-	private static String worldPath = "examples\\medium.json";
+	private static String worldPath = "examples\\small.json";
+	//private static String worldPath = "examples\\medium.json";
 	
 	private static JSONObject result = new JSONObject();
 	private static List<Term> trees;
@@ -133,11 +133,16 @@ public class Shrdlite {
 			result.put("output", "Parse error!");
 
 		} else {
-			try {
+//			try {
 				List<CompositeGoal> goals = new ArrayList<CompositeGoal>();
 				Interpreter interpreter = new Interpreter(currentWorld);
 				for (Term tree : trees) {
-					goals.addAll(interpreter.interpret(tree));
+					try {
+						goals.addAll(interpreter.interpret(tree));
+					} catch (PlanningException e) {
+						//TODO: message gets overwritten later
+						result.put("output", e.getMessage());
+					}
 				}
 				String goalString = goals.toString();
 				result.put("goals", goalString);
@@ -160,9 +165,9 @@ public class Shrdlite {
 						currentWorld = plan.getWorld();
 					}
 				}
-			} catch (PlanningException e) {
-				result.put("output", e.getMessage());
-			}
+//			} catch (PlanningException e) {
+//				result.put("output", e.getMessage());
+//			}
 		}
 	}
 
