@@ -3,8 +3,6 @@ package group3.planning;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import group3.world.Rules;
 import group3.world.World;
 
 /**
@@ -15,11 +13,11 @@ import group3.world.World;
 public class CompositeGoal {
 	private ArrayList<CompositeGoal> goals = new ArrayList<CompositeGoal>();
 	private boolean andGoal = false; //false=or goal
-	
+
 	public void addAllGoals(List<Goal> goals) {
 		this.goals.addAll(goals);
 	}
-	
+
 	public void addGoal(CompositeGoal goal) {
 		this.goals.add(goal);
 	}
@@ -42,7 +40,7 @@ public class CompositeGoal {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		String outputString = "";
@@ -52,7 +50,7 @@ public class CompositeGoal {
 		} else {
 			delimiter = " OR ";
 		}
-		
+
 		Iterator<CompositeGoal> iterator = goals.iterator();
 		while (iterator.hasNext()) {
 			CompositeGoal goal = iterator.next();
@@ -61,10 +59,10 @@ public class CompositeGoal {
 				outputString += delimiter;
 			}
 		}
-		
+
 		return "{"+ outputString +"}";
 	}
-	
+
 	public void setAndGoal(boolean andGoal) {
 		this.andGoal = andGoal;
 	}

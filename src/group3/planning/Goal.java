@@ -5,35 +5,35 @@ import group3.world.Rules;
 import group3.world.World;
 
 public class Goal extends CompositeGoal{
-	
+
 	private ObjectInWorld objectToMove;
 	private RelativePosition relativePosition;
 	private ObjectInWorld otherObject;
 	private String outputString = "";
-	
+
 	public Goal() {
-		
+
 	}
-	
+
 	public Goal(ObjectInWorld objectToMove, RelativePosition relativePosition, ObjectInWorld otherObject) {
 		this.objectToMove = objectToMove;
 		this.relativePosition = relativePosition;
 		this.otherObject = otherObject;
 	}
-	
+
 	public Goal(ObjectInWorld objectToMove, RelativePosition relativePosition) {
 		this.objectToMove = objectToMove;
 		this.relativePosition = relativePosition;
 	}
-	
+
 	public ObjectInWorld GetTargetToMove() {
 		return this.objectToMove;
 	}
-	
+
 	public void setString(String s) {
 		this.outputString = s;
 	}
-	
+
 	@Override
 	public String toString() {
 		return outputString;

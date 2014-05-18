@@ -2,8 +2,6 @@ package group3.planning.csp;
 
 import group3.world.ObjectInWorld;
 import group3.world.World;
-
-import java.awt.List;
 import java.util.ArrayList;
 
 public class CspCreator implements State {
@@ -21,7 +19,7 @@ public class CspCreator implements State {
 			createLocationState(w.getHoldingObject(), -1, -1);
 			holding = new HolderState(true);
 		}
-		
+
 		for (int x = 0; x < w.getWorldRepresentationList().size(); x++) {
 			ArrayList<ObjectInWorld> col = w.getWorldRepresentationList()
 					.get(x);

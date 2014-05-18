@@ -45,9 +45,9 @@ public class Shrdlite {
 	private static World currentWorld;
 
 	private static boolean consoleTest = true;
-	private static String worldPath = "examples\\small.json";
-	//private static String worldPath = "examples\\medium.json";
-	
+	//private static String worldPath = "examples\\small.json";
+	private static String worldPath = "examples\\medium.json";
+
 	private static JSONObject result = new JSONObject();
 	private static List<Term> trees;
 
@@ -60,7 +60,7 @@ public class Shrdlite {
 		JSONArray world;
 		String holding;
 		JSONObject objects;
-		
+
 		if (consoleTest) {
 			jsinput = (JSONObject) JSONValue.parse(readFromFile(worldPath));
 
@@ -69,7 +69,7 @@ public class Shrdlite {
 			holding = (String) jsinput.get("holding");
 			objects = (JSONObject) jsinput.get("objects");
 			currentWorld = new World(world, holding, objects);
-			
+
 		} else {
 
 			jsinput = (JSONObject) JSONValue.parse(readFromStdin());
@@ -78,13 +78,13 @@ public class Shrdlite {
 			holding = (String) jsinput.get("holding");
 			objects = (JSONObject) jsinput.get("objects");
 			currentWorld = new World(world, holding, objects);
-			
+
 			result.put("utterance", utterance);
 
 
 			DCGParser parser = new DCGParser("shrdlite_grammar.pl", "dcg_parser.pl");
 			trees = parser.parseSentence("command", utterance);
-			
+
 			parseAndplan();
 
 			System.out.print(result);
@@ -114,14 +114,14 @@ public class Shrdlite {
 
 			DCGParser parser = new DCGParser(AbsolutePaths.DCGPARSERFILE, AbsolutePaths.PROLOGPARSERFILE);
 			trees = parser.parseSentence("command", lista);
-			
-			
+
+
 			parseAndplan();
 
 			System.out.println(result);
 		}
 	}
-	
+
 	private static void parseAndplan() throws TimeLimitExceededException {
 		List tstrs = new ArrayList();
 		result.put("trees", tstrs);
@@ -133,41 +133,37 @@ public class Shrdlite {
 			result.put("output", "Parse error!");
 
 		} else {
-//			try {
-				List<CompositeGoal> goals = new ArrayList<CompositeGoal>();
-				Interpreter interpreter = new Interpreter(currentWorld);
-				for (Term tree : trees) {
-					try {
-						goals.addAll(interpreter.interpret(tree));
-					} catch (PlanningException e) {
-						//TODO: message gets overwritten later
-						result.put("output", e.getMessage());
-					}
+			List<CompositeGoal> goals = new ArrayList<CompositeGoal>();
+			Interpreter interpreter = new Interpreter(currentWorld);
+			for (Term tree : trees) {
+				try {
+					goals.addAll(interpreter.interpret(tree));
+				} catch (PlanningException e) {
+					//TODO: message gets overwritten later
+					result.put("output", e.getMessage());
 				}
-				String goalString = goals.toString();
-				result.put("goals", goalString);
+			}
+			String goalString = goals.toString();
+			result.put("goals", goalString);
 
-				if (goals.isEmpty()) {
-					result.put("output", "Interpretation error!");
+			if (goals.isEmpty()) {
+				result.put("output", "Interpretation error!");
 
-				} else if (goals.size() > 1) {
-					result.put("output", "Ambiguity error!");
+			} else if (goals.size() > 1) {
+				result.put("output", "Ambiguity error!");
 
+			} else {
+				Planner planner = new BreadthFirstPlanner(currentWorld);
+				Plan plan = planner.findSolution(goals.get(0));
+				result.put("plan", plan.getPlan());
+
+				if (plan.getPlan().isEmpty()) {
+					result.put("output", "Goal is alreay fulfilled!");
 				} else {
-					Planner planner = new BreadthFirstPlanner(currentWorld);
-					Plan plan = planner.findSolution(goals.get(0));
-					result.put("plan", plan.getPlan());
-					
-					if (plan.getPlan().isEmpty()) {
-						result.put("output", "Goal is alreay fulfilled!");
-					} else {
-						result.put("output", "Success!");
-						currentWorld = plan.getWorld();
-					}
+					result.put("output", "Success!");
+					currentWorld = plan.getWorld();
 				}
-//			} catch (PlanningException e) {
-//				result.put("output", e.getMessage());
-//			}
+			}
 		}
 	}
 

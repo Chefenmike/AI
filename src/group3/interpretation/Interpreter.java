@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import gnu.prolog.io.ParseException;
 import gnu.prolog.term.AtomicTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.term.CompoundTerm;
@@ -27,8 +26,6 @@ import org.json.simple.JSONObject;
 
 public class Interpreter {
 	private World world;
-	private String holding;
-	private JSONObject objects;
 
 	public Interpreter(JSONArray world, String holding, JSONObject objects) {
 		this.world = new World(world, holding, objects);
@@ -135,16 +132,6 @@ public class Interpreter {
 											+ robj.getId());
 									innerCompositeGoal.addGoal(g);
 								} 
-								/*else {
-									//For some reason, putting this in rules isnt enough.
-									//box cannot be put inside of another box
-									if (obj.getShape().equals(Shape.BOX)
-											&& robj.getShape()
-													.equals(Shape.BOX)
-											&& rp.equals(RelativePosition.INSIDE))
-										throw new PlanningException(
-												"Unallowed goal");
-								}*/
 							} else {
 								ObjectOperator operator = (ObjectOperator) r;
 								if (operator.getOperator().equals(
@@ -330,7 +317,7 @@ public class Interpreter {
 	 */
 	private ArrayList<ObjectInterface> getRelative(
 			ArrayList<ObjectInterface> matchingObjects, Term relation)
-			throws PlanningException {
+					throws PlanningException {
 		ArrayList<ObjectInterface> returnList = new ArrayList<ObjectInterface>();
 		CompoundTerm compound = (CompoundTerm) relation;
 		RelativePosition rp = RelativePosition

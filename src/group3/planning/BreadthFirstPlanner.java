@@ -1,7 +1,6 @@
 package group3.planning;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +14,6 @@ import group3.world.ObjectInWorld;
 import group3.world.RelativePosition;
 import group3.world.Rules;
 import group3.world.World;
-import group3.world.definitions.Colour;
-import group3.world.definitions.Shape;
 
 public class BreadthFirstPlanner extends Planner {
 
