@@ -166,6 +166,10 @@ public class World {
 			return isUnder(object1, object2);
 		} else if (rp.equals(RelativePosition.BESIDE)) {
 			return isBeside(object1, object2);
+		} else if (rp.equals(RelativePosition.RIGHTOF)) {
+			return isRightOf(object1, object2);
+		} else if (rp.equals(RelativePosition.LEFTOF)) {
+			return isLeftOf(object1, object2);
 		} 
 
 		return false;
